@@ -57,7 +57,7 @@ if (isset($_POST["login"])) {
 }
 
 if (isset($_SESSION["login"])) {
-    header('Location: admin/staff.php');
+    header('Location: admin/staff_form.php');
     exit;
 }
 if (isset($_POST["login"])) {
@@ -83,7 +83,7 @@ if (isset($_POST["login"])) {
             }
             // masuk ke index jika password di verifikasi ada
             $_SESSION['username'] = $username;
-            header('Location: admin/staff.php');
+            header('Location: admin/staff_form.php');
             exit;
         }
     }

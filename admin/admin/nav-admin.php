@@ -1,12 +1,3 @@
-<?php 
-session_start();
-if (!isset($_SESSION['login'])) {
-  header('location: ../index.php');
-  exit;
-}
-require "../../function.php";
-
-?>
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 

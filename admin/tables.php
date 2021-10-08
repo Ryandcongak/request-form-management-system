@@ -1,3 +1,10 @@
+<?php 
+session_start();
+if(!isset($_SESSION['login'])){
+    header('location: ../index.php');
+  exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -146,7 +153,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <?php require "admin/nav-admin.php"; ?>
+                <?php require "staff/nav-staff.php"; ?>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
