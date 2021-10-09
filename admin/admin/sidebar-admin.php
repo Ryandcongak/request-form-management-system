@@ -17,15 +17,15 @@
 </li>
 
 <!-- Divider -->
-<hr class="sidebar-divider">
+<!-- <hr class="sidebar-divider"> -->
 
 <!-- Heading -->
-<div class="sidebar-heading">
+<!-- <div class="sidebar-heading">
     Problem Sharing
-</div>
+</div> -->
 
 <!-- Nav Item - Pages Collapse Menu -->
-<li class="nav-item">
+<!-- <li class="nav-item">
     <a class="nav-link" href="form-request.php">
         <i class="fas fa-fw fa-table"></i>
         <span>Form Request</span></a>
@@ -34,10 +34,10 @@
     <a class="nav-link" href="#">
         <i class="fas fa-fw fa-table"></i>
         <span>Ideas</span></a>
-</li>
+</li> -->
 
 <!-- Divider -->
-<hr class="sidebar-divider d-none d-md-block">
+<!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
 </ul>
 <!-- End of Sidebar -->

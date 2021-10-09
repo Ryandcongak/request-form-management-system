@@ -19,13 +19,11 @@ if (isset($_COOKIE['en']) && isset($_COOKIE['key'])) {
     }
 }
 
-// session
+// Admin 4
 if (isset($_SESSION["login"])) {
-    header('Location: admin/index.php');
+    header('Location: admin/admin_dashboard.php');
     exit;
 }
-
-// jika isset atau diset login
 if (isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
@@ -49,13 +47,14 @@ if (isset($_POST["login"])) {
             }
             // masuk ke index jika password di verifikasi ada
             $_SESSION['username'] = $username;
-            header('Location: admin/index.php');
+            header('Location: admin/admin_dashboard.php');
             exit;
         }
     }
     $error = true;
 }
 
+// Staff 3
 if (isset($_SESSION["login"])) {
     header('Location: admin/staff_form.php');
     exit;
@@ -90,40 +89,7 @@ if (isset($_POST["login"])) {
     $error = true;
 }
 
-if (isset($_SESSION["login"])) {
-  header('Location: admin/departement-head.php');
-  exit;
-}
-if (isset($_POST["login"])) {
-  $username = $_POST["username"];
-  $password = $_POST["password"];
-
-  // cek username di database
-  $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND level='1'");
-  if (mysqli_num_rows($result) === 1) {
-
-      // cek password
-      $row = mysqli_fetch_assoc($result);
-      if (password_verify($password, $row["password"])) {
-          // set session
-          $_SESSION["login"] = true;
-          $_SESSION["users_id"] = $row["id"];
-          // cek remember me
-          if (isset($_POST["remember"])) {
-              // set cookie
-              // setcookie('login', 'true', time() + 280);
-              setcookie('en', $row['id'], time() + 140);
-              setcookie('key', hash('sha256', $row['username']), time() + 140);
-          }
-          // masuk ke index jika password di verifikasi ada
-          $_SESSION['username'] = $username;
-          header('Location: admin/departement-head.php');
-          exit;
-      }
-  }
-  $error = true;
-}
-
+// Dircetor
 if (isset($_SESSION["login"])) {
   header('Location: admin/director.php');
   exit;
@@ -158,8 +124,9 @@ if (isset($_POST["login"])) {
   $error = true;
 }
 
+// Head
 if (isset($_SESSION["login"])) {
-  header('Location: admin/staff.php');
+  header('Location: admin/departement-head.php');
   exit;
 }
 if (isset($_POST["login"])) {
@@ -167,7 +134,7 @@ if (isset($_POST["login"])) {
   $password = $_POST["password"];
 
   // cek username di database
-  $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND level='3'");
+  $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND level='1'");
   if (mysqli_num_rows($result) === 1) {
 
       // cek password
@@ -185,12 +152,14 @@ if (isset($_POST["login"])) {
           }
           // masuk ke index jika password di verifikasi ada
           $_SESSION['username'] = $username;
-          header('Location: admin/staff.php');
+          header('Location: admin/departement-head.php');
           exit;
       }
   }
   $error = true;
 }
+
+
 ?>
 
 <!doctype html>
@@ -201,15 +170,8 @@ if (isset($_POST["login"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/fonts/icomoon/style.css">
-
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    
-    <!-- Style -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- style -->
+    <?php require "assets/login-style/style.php"; ?>
 
     <title>Login</title>
   </head>
@@ -262,12 +224,7 @@ if (isset($_POST["login"])) {
 
     
   </div>
-    
-    
-
-    <script src="assets/js/jquery-3.3.1.min.js"></script>
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- script -->
+    <?php require "assets/login-style/script.php"; ?>
   </body>
 </html>

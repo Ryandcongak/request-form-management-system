@@ -31,9 +31,22 @@ function requestForm($data)
     $notes_others = htmlspecialchars($data['notes_others']);
     $id_author = $_SESSION['users_id'];
     
-        $query = "INSERT INTO tb_requests VALUES ('','$requestors_name','$today_date','$date_needed','$requests_choose','$notes_sharing','$notes_others','$id_author')";
+        $query = "INSERT INTO tb_requests VALUES ('','$requestors_name','$today_date','$date_needed','$requests_choose','$notes_sharing','$notes_others','','','','$id_author')";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
+}
+
+function approveRequestForm($data)
+{
+    global $conn;
+
+    $id = $data_pria["id"];
+    $it_team = htmlspecialchars($data["it_team"]);
+
+    $query = "UPDATE `tb_requests` SET `it_team` = '$it_team' WHERE `tb_request`.`id` = '$id'; ";
+    mysqli_query($conn, $query);
+
+    return mysqli_affected_rows($conn);
 }
 
 /* ===================================================NAMA UNDANGAN FUNCTION========================================================================*/

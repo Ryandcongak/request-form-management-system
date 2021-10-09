@@ -11,12 +11,6 @@ require "../function.php";
 $id_author =$_SESSION['users_id'];
 $total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
 $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
-// $query = query("SELECT requests_choose FROM tb_requests WHERE id_users= $id_author");
-
-//     foreach ($query as $q){
-//         $all = $q['requests_choose'];
-//         $arr = explode(",",$all);
-//     }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +36,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php require "staff/sidebar-staff.php"; ?>
+        <?php require "admin/sidebar-admin.php"; ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -51,7 +45,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
             <!-- Main Content -->
             <div id="content">
 
-                <?php require "staff/nav-staff.php"; ?>
+                <?php require "admin/nav-admin.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">

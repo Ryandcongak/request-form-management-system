@@ -8,15 +8,10 @@ if (!isset($_SESSION['login'])) {
   exit;
 }
 require "../function.php";
-$id_author =$_SESSION['users_id'];
-$total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
-// $query = query("SELECT requests_choose FROM tb_requests WHERE id_users= $id_author");
+$total = count(query("SELECT * FROM tb_requests"));
+$datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 
-//     foreach ($query as $q){
-//         $all = $q['requests_choose'];
-//         $arr = explode(",",$all);
-//     }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +24,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard Staff</title>
+    <title>Dashboard Admin</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -42,7 +37,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php require "staff/sidebar-staff.php"; ?>
+        <?php require "admin/sidebar-admin.php"; ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -51,17 +46,11 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
             <!-- Main Content -->
             <div id="content">
 
-                <?php require "staff/nav-staff.php"; ?>
+                <?php require "admin/nav-admin.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div> -->
 
                     <!-- Content Row -->
                     <div class="row">
@@ -102,28 +91,6 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                             </div>
                         </div>
 
-                        <!-- Form Proccess -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Form Proccess
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Form Success -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
@@ -153,14 +120,15 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                             <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Data Request</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Type Request</th>
+                                            <th>Requestor Name</th>
+                                            <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
                                             <th>Head</th>
@@ -169,14 +137,15 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($staffs as $staff): ?>
+                                        <?php foreach($datas as $data): ?>
                                         <tr>
-                                            <td><?= $staff['requests_choose']; ?></td>
-                                            <td><?= $staff['today_date']; ?></td>
-                                            <td><?= $staff['date_needed']; ?></td>
-                                            <td><?php echo ($staff['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
-                                            <td><?php echo ($staff['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
-                                            <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                        <td><?= $data['requestors_name']; ?></td>
+                                            <td><a href="admin_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
+                                            <td><?= $data['today_date']; ?></td>
+                                            <td><?= $data['date_needed']; ?></td>
+                                            <td><?php echo ($data['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
+                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <td><?php echo ($data['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>
