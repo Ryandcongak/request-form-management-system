@@ -1,19 +1,18 @@
 <?php
 session_start();
-if (!isset($_SESSION['login'])) {
+if ($_SESSION['level'] =="") {
   header('location: ../index.php');
   exit;
 }
 
 require "../function.php";
-
 if (isset($_POST["send"])) {
 
 
     if (requestForm($_POST) > 0) {
         echo "<script>
         alert('Request form berhasil dikirim');
-        document.location.href='staff_form.php';
+        document.location.href='staff_dashboard.php';
         </script>";
     } else {
         echo "<script>

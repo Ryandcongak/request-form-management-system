@@ -11,33 +11,10 @@
 
 <!-- Nav Item - Dashboard -->
 <li class="nav-item active">
-    <a class="nav-link" href="index.php">
+    <a class="nav-link" href="departement-head.php">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>
 </li>
-
-<!-- Divider -->
-<hr class="sidebar-divider">
-
-<!-- Heading -->
-<div class="sidebar-heading">
-    Problem Sharing
-</div>
-
-<!-- Nav Item - Pages Collapse Menu -->
-<li class="nav-item">
-    <a class="nav-link" href="form-request.php">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Form Request</span></a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="#">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Ideas</span></a>
-</li>
-
-<!-- Divider -->
-<hr class="sidebar-divider d-none d-md-block">
 
 </ul>
 <!-- End of Sidebar -->

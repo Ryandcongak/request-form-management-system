@@ -10,7 +10,7 @@ if (!isset($_SESSION['login'])) {
 require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
-$succes = query("SELECT SUM(head) AS success FROM tb_requests");
+$succes = query("SELECT SUM(director) AS success FROM tb_requests");
 $t = array_sum($succes[0]);
 
 ?>
@@ -25,7 +25,7 @@ $t = array_sum($succes[0]);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard DEPARTEMENT HEAD</title>
+    <title>Dashboard DIRECTOR</title>
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
 
@@ -37,7 +37,7 @@ $t = array_sum($succes[0]);
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php require "departement-head/sidebar-departement-head.php"; ?>
+        <?php require "director/sidebar-director.php"; ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -46,7 +46,7 @@ $t = array_sum($succes[0]);
             <!-- Main Content -->
             <div id="content">
 
-                <?php require "departement-head/nav-departement-head.php"; ?>
+                <?php require "director/nav-director.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -131,6 +131,7 @@ $t = array_sum($succes[0]);
                                             <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
+                                            <th>Head Approval</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -138,10 +139,11 @@ $t = array_sum($succes[0]);
                                         <?php foreach($datas as $data): ?>
                                         <tr>
                                         <td><?= $data['requestors_name']; ?></td>
-                                            <td><a href="departement_head_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
+                                            <td><a href="director_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
+                                            <td><?php echo ($data['head']==0) ?"Pending" : "Success"; ?></td>
+                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

@@ -10,13 +10,11 @@ if (!isset($_SESSION['login'])) {
 require "../function.php";
 $id_author =$_SESSION['users_id'];
 $total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
-// $query = query("SELECT requests_choose FROM tb_requests WHERE id_users= $id_author");
+$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author ORDER BY today_date DESC");
 
-//     foreach ($query as $q){
-//         $all = $q['requests_choose'];
-//         $arr = explode(",",$all);
-//     }
+
+$succes = query("SELECT SUM(it_team) AS success FROM tb_requests WHERE id_users = $id_author");
+$t = array_sum($succes[0]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,32 +90,10 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Form Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p=$total-$t; echo $p; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Proccess -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Form Proccess
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +108,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Form Success</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -166,6 +142,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                                             <th>Head</th>
                                             <th>Director</th>
                                             <th>IT</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -177,6 +154,9 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                                             <td><?php echo ($staff['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
                                             <td><?php echo ($staff['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
                                             <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <td class="text-center"><a href="staff_delete_request.php?id=<?= $staff['id']; ?>" onclick="return confirm('Yakin untuk menghapus?');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
+                                                    <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
+                                                    </svg></a></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

@@ -12,16 +12,16 @@ $id = $_GET['id'];
 $datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
 
 if (isset($_POST["submit"])) {
-    $test = approveRequestForm($_POST);
+    $test = approveRequestFormHead($_POST);
     if ($test > 0) {
         echo "<script>
             alert('Approve Successfully');
-            document.location.href='admin_dashboard.php';
+            document.location.href='departement-head.php';
             </script>";
     } else {
         echo "<script>
             alert('Approve No Successfully');
-            console.log('".$test."')
+            document.location.href='departement-head.php';
             </script>";
     }
   }
@@ -37,7 +37,7 @@ if (isset($_POST["submit"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Admin View Request</title>
+    <title>DEPARTEMENT HEAD Request View</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -101,10 +101,10 @@ if (isset($_POST["submit"])) {
                                                 <label for="today date" class="form-label">Edit</label>
                                                 <input type="text" class="form-control"  placeholder="<?= $datas['today_date']; ?>" disabled>
                                             </div>
-                                                <input type="text" name="it_team" value="1" hidden>
+                                                <input type="text" name="head" value="1" hidden>
                                             <div class="mb-3">
                                                 <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
-                                                <a href="admin_dashboard.php" class="btn btn-warning"> Pending </a>
+                                                <a href="departement-head.php" class="btn btn-warning"> Pending </a>
                                             </div>
                                         </div>
                                     </div>
