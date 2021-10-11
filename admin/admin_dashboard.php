@@ -1,11 +1,15 @@
 <?php
 
 use function PHPSTORM_META\map;
-
 session_start();
-if (!isset($_SESSION['login'])) {
+if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
+}
+if($_SESSION['level'] != "admin")
+{
+    header('location: ../index.php');
+    exit;
 }
 require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
