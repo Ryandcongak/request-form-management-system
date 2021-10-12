@@ -9,7 +9,6 @@ if($_SESSION['level'] != "staff")
     header('location: ../index.php');
     exit;
 }
-
 require "../function.php";
 if (isset($_POST["send"])) {
 
@@ -121,13 +120,13 @@ if (isset($_POST["send"])) {
                                                             </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="file sharing" id="flexCheckIndeterminate">
+                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="file sharing" id="flexCheckIndeterminate" onclick="myFunction()">
                                                             <label class="form-check-label" for="flexCheckIndeterminate">
                                                                 File Sharing
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="mb-3">
+                                                    <div class="mb-3" id="divSharing">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
                                                         <textarea class="form-control" name="notes_sharing" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                     </div>
@@ -142,15 +141,19 @@ if (isset($_POST["send"])) {
                                                         <input type="text" class="form-control" placeholder="<?= $_SESSION['username']; ?>" disabled>
                                                     </div>
                                                     <div class="mb-3">
+                                                        <label for="depart" class="form-label">Departement</label>
+                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>" disabled>
+                                                    </div>
+                                                    <div class="mb-3">
                                                         <label for="today date" class="form-label">Today's Date</label>
-                                                        <input type="date" class="form-control"  placeholder="<?php $today = date("Y-m-d"); echo $today; ?>" disabled>
+                                                        <input type="date" class="form-control"  value="<?php $today = date("Y-m-d"); echo $today; ?>" disabled>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <button type="submit" name="send" class="btn btn-primary">Send</button>
-                                                    <button type="button" class="btn btn-secondary">Reset</button>
+                                                    <button type="reset" class="btn btn-secondary">Reset</button>
                                                 </div>
                                             </div>
                                             </form>
@@ -209,7 +212,17 @@ if (isset($_POST["send"])) {
     <!-- script -->
         <?php require "../assets/style/scripts.php"; ?>
     <!-- end script -->
-
+    <script>
+        function myFunction() {
+        var i = document.getElementById("divSharing");
+        if(i.style.display === "block"){
+            i.style.display = "none";
+        }else
+        {
+            i.style.display= "block";
+        }
+    }
+</script>
 </body>
 
 </html>

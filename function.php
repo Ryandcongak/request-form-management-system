@@ -101,6 +101,7 @@ function registrasi($data_register)
 
     $username = strtolower(stripslashes($data_register['username']));
     $password = md5($data_register['password']);
+    $depart = htmlspecialchars(($data_register['depart']));
     $level = htmlspecialchars($data_register['level']);
 
     $result = mysqli_query($conn, "SELECT username FROM users WHERE username = 
@@ -110,7 +111,7 @@ function registrasi($data_register)
         return false;
     }
 
-    mysqli_query($conn, "INSERT INTO users VALUES ('','$username','$password','$level')");
+    mysqli_query($conn, "INSERT INTO users VALUES ('','$username','$password','$depart','$level')");
     return mysqli_affected_rows($conn);
 }
 // Registration Upload

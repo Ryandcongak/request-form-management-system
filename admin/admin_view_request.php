@@ -13,7 +13,7 @@ if($_SESSION['level'] != "admin")
 }
 require "../function.php";
 $id = $_GET['id'];
-$datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
+$datas = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.requests_choose, i.notes_sharing,i.notes_others, i.head, i.director, i.it_team, i.id_users FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users")[0];
 
 if (isset($_POST["submit"])) {
     $test = approveRequestForm($_POST);
@@ -100,6 +100,10 @@ if (isset($_POST["submit"])) {
                                             <div class="mb-3">
                                                 <label for="requestor name" class="form-label">Requestor's Name</label>
                                                 <input type="text" class="form-control" placeholder="<?= $datas['requestors_name']; ?>" disabled>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="requestor name" class="form-label">Departement</label>
+                                                <input type="text" class="form-control" placeholder="<?= $datas['depart']; ?>" disabled>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="today date" class="form-label">Edit</label>

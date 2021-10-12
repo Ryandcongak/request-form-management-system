@@ -18,6 +18,8 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 $succes = query("SELECT SUM(it_team) AS success FROM tb_requests");
 $t = array_sum($succes[0]);
 
+$sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others, i.head, i.director, i.it_team FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC");
+// SELECT u.id, u.nama, a.id, a.nama FROM user AS u INNER JOIN user_achievement AS i ON u.id = i.user_id INNER JOIN achievement AS a ON i.achievement_id = a.id
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,6 +136,7 @@ $t = array_sum($succes[0]);
                                     <thead>
                                         <tr>
                                             <th>Requestor Name</th>
+                                            <th>Departement</th>
                                             <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
@@ -143,9 +146,10 @@ $t = array_sum($succes[0]);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($datas as $data): ?>
+                                        <?php foreach($sql as $data): ?>
                                         <tr>
-                                        <td><?= $data['requestors_name']; ?></td>
+                                            <td><?= $data['requestors_name']; ?></td>
+                                            <td><?= $data['depart'];?></td>
                                             <td><a href="admin_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>

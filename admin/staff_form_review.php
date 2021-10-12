@@ -88,14 +88,18 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                                         <input type="text" class="form-control" placeholder="<?= $_SESSION['username']; ?>" >
                                                     </div>
                                                     <div class="mb-3">
+                                                        <label for="requestor name" class="form-label">Departement</label>
+                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>" >
+                                                    </div>
+                                                    <div class="mb-3">
                                                         <label for="today date" class="form-label">Today's Date</label>
-                                                        <input type="text" class="form-control"  placeholder="<?= $query['today_date']; ?>>" >
+                                                        <input type="text" class="form-control"  placeholder="<?= $query['today_date']; ?>" >
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <a class="btn bg-info"  href="staff_dashboard.php">Back to Dasboard</a>
+                                                    <a class="btn btn-info"  href="staff_dashboard.php">Back to Dasboard</a>
                                                 </div>
                                             </div>
                                             </form>

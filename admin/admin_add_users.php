@@ -89,6 +89,16 @@ if (isset($_POST["submit"])) {
                                       <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                                     </div>
                                     <div class="mb-3">
+                                    <select class="form-control" name="depart" aria-label="Default select example">
+                                        <option selected>Open Departement User</option>
+                                        <option value="hrd">HRD</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="accounting">Accounting</option>
+                                        <option value="shop">Shop</option>
+                                        <option value="warehouse">Warehouse</option>
+                                    </select>
+                                    </div>
+                                    <div class="mb-3">
                                     <select class="form-control" name="level" aria-label="Default select example">
                                         <option selected>Open Level User</option>
                                         <option value="staff">Staff</option>
