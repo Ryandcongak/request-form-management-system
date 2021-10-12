@@ -1,76 +1,156 @@
 <?php
-require "function.php";
+
+use function PHPSTORM_META\map;
+session_start();
+if (!isset($_SESSION['level'])) {
+  header('location: ../index.php');
+  exit;
+}
+if($_SESSION['level'] != "admin")
+{
+    header('location: ../index.php');
+    exit;
+}
+require "../function.php";
+$users = query("SELECT * FROM users");
+$total_users = count(query("SELECT * FROM users"));
+
+// Jika register di click
+if (isset($_POST["submit"])) {
+  if (registrasi($_POST) > 0) {
+      echo "<script>
+      alert('Selamat! Data anda sudah teregistrasi');
+      document.location.href='admin_users.php';
+      </script>";
+  } else {
+      echo mysqli_error($conn);
+  }
+}
 ?>
-
-<!doctype html>
+?>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
+
+<head>
+
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <?php require "assets/login-style/style.php"; ?>
+    <title>Add User</title>
 
-    <title>Register</title>
-  </head>
-  <body>
-  <?php
-        if (isset($_POST["register"])) {
-            if (registrasi($_POST) > 0) {
-                echo "<div class='alert alert-success' role='alert'>
-                <h4 class='alert-heading'>Register Berhasil!</h4>
-              </div>";
-            } else {
-                echo mysqli_error($conn);
-            }
-        }
-        ?>
+    <!-- style -->
+    <?php require "../assets/style/style.php"; ?>
 
-  <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2" style="background-image: url('assets/images/register.jpg');"></div>
-    <div class="contents order-2 order-md-1">
+</head>
 
-      <div class="container">
-        <div class="row align-items-center justify-content-center">
-          <div class="col-md-7">
-            <h3>Register to <strong>IT Request Form</strong></h3>
-            <p class="mb-4">What you want what you get</p>
-            <form action="" method="post">
-              <div class="form-group first">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" placeholder="Your Usename" name="username" id="username">
-              </div>
-              <div class="form-group last mb-3">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" placeholder="Your Password" id="password" name="password">
-              </div>
+<body id="page-top">
 
-              <div class="form-group last mb-3">
-                <label for="re-password">Re-Password</label>
-                <input type="password" class="form-control" placeholder="Your Re-Password" id="re-password" name="password2">
-              </div>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-              <div class="form-group last mb-3">
-                <label for="level">level</label>
-                <select class="form-control" aria-label="Default select example" name="level">
-                  <option selected>-- Pilih level employee --</option>
-                  <option value="1">Departemen Head</option>
-                  <option value="2">Director</option>
-                  <option value="3">Staff</option>
-                  <option value="4"></option>
-                </select>
-              </div>
-              
-              <button type="submit" name="register" class="btn btn-block btn-primary">Register</button>
+        <!-- Sidebar -->
+        <?php require "admin/sidebar-admin.php"; ?>
+        <!-- End of Sidebar -->
 
-            </form>
-          </div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <?php require "admin/nav-admin.php"; ?>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Content Column -->
+                        <div class="col-lg-12 mb-4">
+
+                            <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <form action="" method="post">
+                                    <div class="mb-3">
+                                      <label for="username" class="form-label">Username</label>
+                                      <input type="text" class="form-control" name="username" id="username" placeholder="Username..">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="password" class="form-label">Password</label>
+                                      <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                    </div>
+                                    <div class="mb-3">
+                                    <select class="form-control" name="level" aria-label="Default select example">
+                                        <option selected>Open Level User</option>
+                                        <option value="staff">Staff</option>
+                                        <option value="head">Departement Head</option>
+                                        <option value="director">Director</option>
+                                        <option value="admin">IT</option>
+                                    </select>
+                                    </div>
+                                    <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                    <a href="admin_users.php" class="btn btn-secondary">Cancel</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <?php require "footer.php"; ?>
+            <!-- End of Footer -->
+
         </div>
-      </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-  </div>
-    <?php require "assets/login-style/script.php"; ?>
-  </body>
+    <!-- Script -->
+    <?php require "../assets/style/scripts.php"; ?>
+
+</body>
+
 </html>

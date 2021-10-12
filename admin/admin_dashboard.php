@@ -15,6 +15,8 @@ require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 
+$succes = query("SELECT SUM(it_team) AS success FROM tb_requests");
+$t = array_sum($succes[0]);
 
 ?>
 <!DOCTYPE html>
@@ -85,7 +87,7 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Form Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p = $total - $t; echo $p;?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -103,7 +105,7 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Form Success</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>

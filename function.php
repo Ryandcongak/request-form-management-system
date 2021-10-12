@@ -87,26 +87,21 @@ function delete_form($id)
     return mysqli_affected_rows($conn);
 }
 
-/* ===================================================NAMA UNDANGAN FUNCTION========================================================================*/
-// Nama Undangan Deelte
-function delete_guest($id)
+function delete_userss($id)
 {
     global $conn;
-
-    mysqli_query($conn, "DELETE FROM guests WHERE id = $id");
+    mysqli_query($conn, "DELETE FROM users WHERE id = $id");
     return mysqli_affected_rows($conn);
 }
 
-/* ===================================================REGISTRATION / USERS FUNCTION========================================================================*/
-// Registration Create
+
 function registrasi($data_register)
 {
     global $conn;
 
     $username = strtolower(stripslashes($data_register['username']));
-    $password = mysqli_real_escape_string($conn, $data_register['password']);
-    $password2 = mysqli_real_escape_string($conn, $data_register['password2']);
-    $level = strtolower(stripslashes($data_register['level']));
+    $password = md5($data_register['password']);
+    $level = htmlspecialchars($data_register['level']);
 
     $result = mysqli_query($conn, "SELECT username FROM users WHERE username = 
     '$username'");
@@ -114,12 +109,6 @@ function registrasi($data_register)
         echo "<script>alert('Username sudah terdaftar, gunakan Username lain!');</script>";
         return false;
     }
-    if ($password !== $password2) {
-        echo "<script>alert('Re-Confirmasi password tidak sama !');</script>";
-        return false;
-    }
-    
-    $password = password_hash($password, PASSWORD_DEFAULT);
 
     mysqli_query($conn, "INSERT INTO users VALUES ('','$username','$password','$level')");
     return mysqli_affected_rows($conn);

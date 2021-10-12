@@ -2,9 +2,14 @@
 
 use function PHPSTORM_META\map;
 session_start();
-if ($_SESSION['level'] =="") {
+if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
+}
+if($_SESSION['level'] != "director")
+{
+    header('location: ../index.php');
+    exit;
 }
 require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));

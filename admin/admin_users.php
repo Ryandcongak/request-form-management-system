@@ -1,16 +1,19 @@
 <?php
 
 use function PHPSTORM_META\map;
-
 session_start();
-if (!isset($_SESSION['login'])) {
+if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
+if($_SESSION['level'] != "admin")
+{
+    header('location: ../index.php');
+    exit;
+}
 require "../function.php";
-$id_author =$_SESSION['users_id'];
-$total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
+$users = query("SELECT * FROM users");
+$total_users = count(query("SELECT * FROM users"));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +26,7 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard Staff</title>
+    <title>Admin Users</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -50,83 +53,18 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div> -->
-
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Total Request -->
+                        <!-- Total Users -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Forms</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total; ?></div>
-                                        </div>
-                                        <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Pending -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Form Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                        </div>
-                                        <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Proccess -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Form Proccess
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Success -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Form Success</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                                Total User</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_users; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -149,28 +87,28 @@ $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
                         </div>
+                        <a class="btn btn-primary" href="admin_add_users.php" role="button">+ Add User</a>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Type Request</th>
-                                            <th>request date</th>
-                                            <th>Needed date</th>
-                                            <th>Head</th>
-                                            <th>Director</th>
-                                            <th>IT</th>
+                                            <th>No</th>
+                                            <th>Username</th>
+                                            <th>Level</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($staffs as $staff): ?>
+                                        <?php $n= 1; ?>
+                                        <?php foreach($users as $u): ?>
                                         <tr>
-                                            <td><?= $staff['requests_choose']; ?></td>
-                                            <td><?= $staff['today_date']; ?></td>
-                                            <td><?= $staff['date_needed']; ?></td>
-                                            <td><?php echo ($staff['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
-                                            <td><?php echo ($staff['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
-                                            <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <td><?= $n++; ?></td>
+                                            <td class="text-capitalize"><?= $u['username']; ?></td>
+                                            <td class="text-uppercase fw-bold"><?= $u['level']; ?></td>
+                                            <td class="text-center"><a href="delete_user.php?id=<?= $u['id']; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2-fill" viewBox="0 0 16 16">
+                                            <path d="M2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225zm9.89-.69C10.966 2.214 9.578 2 8 2c-1.58 0-2.968.215-3.926.534-.477.16-.795.327-.975.466.18.14.498.307.975.466C5.032 3.786 6.42 4 8 4s2.967-.215 3.926-.534c.477-.16.795-.327.975-.466-.18-.14-.498-.307-.975-.466z"/>
+                                            </svg></a></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

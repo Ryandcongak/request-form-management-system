@@ -23,6 +23,7 @@ if($cek > 0){
 	// cek jika user login sebagai admin
 	if($data['level']=="head"){
 		// buat session login dan username
+		$_SESSION['users_id'] = $data['id'];
 		$_SESSION['username'] = $username;
 		$_SESSION['level'] = "head";
 		// alihkan ke halaman dashboard admin
@@ -31,6 +32,7 @@ if($cek > 0){
 	// cek jika user login sebagai pegawai
 	}else if($data['level']=="director"){
 		// buat session login dan username
+		$_SESSION['users_id'] = $data['id'];
 		$_SESSION['username'] = $username;
 		$_SESSION['level'] = "director";
 		// alihkan ke halaman dashboard pegawai
@@ -39,6 +41,7 @@ if($cek > 0){
 	// cek jika user login sebagai pengurus
 	}else if($data['level']=="staff"){
 		// buat session login dan username
+		$_SESSION['users_id'] = $data['id'];
 		$_SESSION['username'] = $username;
 		$_SESSION['level'] = "staff";
 		// alihkan ke halaman dashboard pengurus
@@ -46,6 +49,7 @@ if($cek > 0){
  
   }else if($data['level']=="admin"){
 		// buat session login dan username
+		$_SESSION['users_id'] = $data['id'];
 		$_SESSION['username'] = $username;
 		$_SESSION['level'] = "admin";
 		// alihkan ke halaman dashboard pengurus

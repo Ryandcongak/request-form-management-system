@@ -1,8 +1,13 @@
 <?php
 session_start();
-if ($_SESSION['level'] =="") {
+if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
+}
+if($_SESSION['level'] != "staff")
+{
+    header('location: ../index.php');
+    exit;
 }
 
 require "../function.php";
