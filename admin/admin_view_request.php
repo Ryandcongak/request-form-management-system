@@ -13,7 +13,7 @@ if($_SESSION['level'] != "admin")
 }
 require "../function.php";
 $id = $_GET['id'];
-$datas = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.requests_choose, i.notes_sharing,i.notes_others, i.head, i.director, i.it_team, i.id_users FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users")[0];
+$datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
 
 if (isset($_POST["submit"])) {
     $test = approveRequestForm($_POST);
@@ -47,9 +47,8 @@ if (isset($_POST["submit"])) {
     <?php require "../assets/style/style.php"; ?>
 
 </head>
-
-<body id="page-top">
-
+<body id="page-top" class="example-screen">
+    
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -67,7 +66,20 @@ if (isset($_POST["submit"])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Details Form</h1>
+                        <a href="admin_print.php?id=<?= $datas['id'];?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_BLANK"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Print Review</a>
+                    </div>
+                    </div>
+                </div>
+
                     <div class="row">
+                        
                         <div class="col-sm-12 mb-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-4">
@@ -103,7 +115,7 @@ if (isset($_POST["submit"])) {
                                             </div>
                                             <div class="mb-3">
                                                 <label for="requestor name" class="form-label">Departement</label>
-                                                <input type="text" class="form-control" placeholder="<?= $datas['depart']; ?>" disabled>
+                                                <input type="text" class="form-control text-uppercase" placeholder=" <?= $_SESSION['users_depart']; ?>" disabled>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="today date" class="form-label">Edit</label>
@@ -122,7 +134,7 @@ if (isset($_POST["submit"])) {
                     </div>
                 </div>
                 <!-- /.container-fluid -->
-
+               
             </div>
             <!-- End of Main Content -->
 

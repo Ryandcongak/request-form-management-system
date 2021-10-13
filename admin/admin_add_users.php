@@ -104,7 +104,7 @@ if (isset($_POST["submit"])) {
                                         <option value="staff">Staff</option>
                                         <option value="head">Departement Head</option>
                                         <option value="director">Director</option>
-                                        <option value="admin">IT</option>
+                                        <option value="it">IT</option>
                                     </select>
                                     </div>
                                     <button type="submit" name="submit" class="btn btn-primary">Add</button>

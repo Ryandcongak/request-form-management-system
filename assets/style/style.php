@@ -7,3 +7,4 @@
     <!-- Custom styles for this template-->
     <link href="../assets/style/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/css/style.css">
+    <link rel="stylesheet" href="../vendor/print.min.css">
