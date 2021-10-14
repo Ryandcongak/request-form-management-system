@@ -1,38 +1,22 @@
-<?php 
-session_start();
-if (!isset($_SESSION['level'])) {
-  header('location: ../index.php');
-  exit;
-}
-if($_SESSION['level'] != "admin")
-{
-    header('location: ../index.php');
-    exit;
-}
-
-require "../function.php";
-$id = $_GET['id'];
-$datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
-include "../vendor/autoload.php";
-$mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
-?>
-<link rel="stylesheet" href="mpdf_bootstrap.css">
+<style>
+    .underline{
+    text-decoration: underline;
+  }
+</style>
+<link rel="stylesheet" href="admin/mpdf_bootstrap.css">
 <div class="container">
-  <div class="row">
-    <div class="col-xs-4 header-kiri">
-      <img src="../assets/images/logo.jpg" width="50%" alt="">
-    </div>
-    <div class="col-xs-8 header-kanan">
-      <h2>INDOLINEN IT Departement</h2>
+    <div class="row mt-5">
+        <div class="col-sm-2">
+            <img src="../assets/images/logo.jpg" width="80%" class="rounded mx-auto d-block" alt="">
+        </div>
+        <div class="col-sm-10 text-center">
+            <h2 class="mt-1">INDOLINEN IT Departement</h2>
             <h5>CV. BALI RATU MANDIRI</h5>
             <p>Jalan Mahendradata No.107 Denpasar, Bali 8011 Indonesia <br>
             Telp. 0361 488429 Fax. 0361 488752 Website: www.indolinen.com</p>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <hr id="line">
-  </div>
-  <div class="row">
+    <div class="row">
         <div class="col-sm-12 text-center">
             <hr>
             <h4 class="underline">Request Form</p></h4>
@@ -68,7 +52,7 @@ $mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
                 <label for="">Today"s Date : <span class="underline"><?= $datas["today_date"]; ?></span></label>
             </div>
             <div class="mb-3">
-                <label for="">Date Needed by : <span class="underline"></span></label>
+                <label for="">Date Needed by : <span class="underline"><?= $datas["date_needed"]; ?></span></label>
             </div>
         </div>
     </div>
@@ -90,10 +74,4 @@ $mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
         </div>
     </div>
 </div>
-<?php 
-$html = ob_get_contents();
-$mpdf->WriteHTML(utf8_decode($html));
-$mpdf->Output("Print Request Form.pdf","I");
-exit;
 
-?>
