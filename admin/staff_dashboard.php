@@ -31,7 +31,7 @@ $t = array_sum($succes[0]);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard Staff</title>
+    <title>Dashboard <?= $_SESSION['users_depart']; ?></title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -136,9 +136,10 @@ $t = array_sum($succes[0]);
                                             <th>Type Request</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
-                                            <th>Head</th>
+                                            <!-- <th>Head</th> -->
                                             <th>Director</th>
                                             <th>IT</th>
+                                            <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -148,9 +149,10 @@ $t = array_sum($succes[0]);
                                             <td><?= $staff['requests_choose']; ?></td>
                                             <td><?= $staff['today_date']; ?></td>
                                             <td><?= $staff['date_needed']; ?></td>
-                                            <td><?php echo ($staff['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <!-- <td></td> -->
                                             <td><?php echo ($staff['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
                                             <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <td><?php echo ($staff['status']==0) ?"<span class='bg-warning'>Dalam Proses</span>" : "<span class='bg-success'>Done</span>";?></td>
                                             <td class="text-center">
                                                 <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="m-4">Review Details</a><a href="staff_delete_request.php?id=<?= $staff['id']; ?>" onclick="return confirm('Yakin untuk menghapus?');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
                                                     <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>

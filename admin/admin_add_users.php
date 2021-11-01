@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;
@@ -26,7 +26,6 @@ if (isset($_POST["submit"])) {
       echo mysqli_error($conn);
   }
 }
-?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +74,7 @@ if (isset($_POST["submit"])) {
                             <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Add New User</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -89,20 +88,21 @@ if (isset($_POST["submit"])) {
                                       <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                                     </div>
                                     <div class="mb-3">
+                                    <label for="depart" class="form-label">Departement :</label>
                                     <select class="form-control" name="depart" aria-label="Default select example">
-                                        <option selected>Open Departement User</option>
+                                        
                                         <option value="hrd">HRD</option>
                                         <option value="marketing">Marketing</option>
                                         <option value="accounting">Accounting</option>
+                                        <option value="it">IT</option>
                                         <option value="shop">Shop</option>
                                         <option value="warehouse">Warehouse</option>
                                     </select>
                                     </div>
                                     <div class="mb-3">
+                                        <label for="lavel" class="form-label"> Level User</label>
                                     <select class="form-control" name="level" aria-label="Default select example">
-                                        <option selected>Open Level User</option>
                                         <option value="staff">Staff</option>
-                                        <option value="head">Departement Head</option>
                                         <option value="director">Director</option>
                                         <option value="it">IT</option>
                                     </select>

@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;
@@ -26,7 +26,7 @@ $total_users = count(query("SELECT * FROM users"));
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Admin Users</title>
+    <title><?= $_SESSION['level']; ?> Users</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -85,7 +85,7 @@ $total_users = count(query("SELECT * FROM users"));
                             <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Data Users</h6>
                         </div>
                         <a class="btn btn-primary" href="admin_add_users.php" role="button">+ Add User</a>
                         <div class="card-body">

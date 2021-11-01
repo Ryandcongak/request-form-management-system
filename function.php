@@ -1,7 +1,6 @@
 <?php
 // Connection Database
 $conn = mysqli_connect("localhost", "root", "", "it_indolinen");
-// $conn = mysqli_connect("localhost", "lovewedd_ryand", "FHwKuU2znWbd", "lovewedd_");
 
 /* ===================================================READ QUERY FUNCTION========================================================================*/
 // READ
@@ -18,20 +17,32 @@ function query($query)
 
 
 /* ===================================================REQUEST FORM CREATE==============================================================================*/
-// Profil Pria Create
 function requestForm($data)
 {
     global $conn;
 
-    $requestors_name = $_SESSION['username'];
+    $requestors_name =htmlspecialchars($data["requestors_name"]) ;
     $today_date = date('Y-m-d');
     $date_needed = htmlspecialchars($data["date_needed"]);
     $requests_choose = implode(',',$data['requests_choose']);
     $notes_sharing = htmlspecialchars($data["notes_sharing"]);
     $notes_others = htmlspecialchars($data['notes_others']);
+    $status = htmlspecialchars($data['status']);
     $id_author = $_SESSION['users_id'];
     
-        $query = "INSERT INTO tb_requests VALUES ('','$requestors_name','$today_date','$date_needed','$requests_choose','$notes_sharing','$notes_others','','','','$id_author')";
+        $query = "INSERT INTO tb_requests VALUES 
+        ('',
+            '$requestors_name',
+            '$today_date',
+            '$date_needed',
+            '$requests_choose',
+            '$notes_sharing',
+            '$notes_others',
+            '',
+            '',
+            '',
+            '$status',
+            '$id_author')";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
 }

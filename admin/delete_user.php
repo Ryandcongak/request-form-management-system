@@ -4,7 +4,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;

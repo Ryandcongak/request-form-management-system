@@ -37,7 +37,7 @@ if (isset($_POST["send"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Request Form Staff</title>
+    <title>Request Form</title>
 
     <!-- Style -->
     <?php require "../assets/style/style.php"; ?>
@@ -75,6 +75,7 @@ if (isset($_POST["send"])) {
                                         </div>
                                         <div class="card-body">
                                             <form action="" method="post">
+                                                <input type="text" name="status" id="status" value="0" hidden>
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
@@ -138,7 +139,7 @@ if (isset($_POST["send"])) {
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['username']; ?>" disabled>
+                                                        <input type="text" class="form-control" name="requestors_name" placeholder="Name Request">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="depart" class="form-label">Departement</label>

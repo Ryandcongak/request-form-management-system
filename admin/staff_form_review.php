@@ -79,13 +79,13 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                        <textarea class="form-control"  id="notes_other" rows="3" placeholder="IInput your other notes" placeholder="<?= $query['notes_others']; ?>"></textarea>
+                                                        <textarea class="form-control"  id="notes_other" rows="3" placeholder="Input your other notes" placeholder="<?= $query['notes_others']; ?>"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['username']; ?>" >
+                                                        <input type="text" class="form-control" placeholder="<?= $query['requestors_name']; ?>" >
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Departement</label>

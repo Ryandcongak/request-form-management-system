@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;
@@ -18,8 +18,7 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 $succes = query("SELECT SUM(it_team) AS success FROM tb_requests");
 $t = array_sum($succes[0]);
 
-$sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others, i.head, i.director, i.it_team FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC");
-// SELECT u.id, u.nama, a.id, a.nama FROM user AS u INNER JOIN user_achievement AS i ON u.id = i.user_id INNER JOIN achievement AS a ON i.achievement_id = a.id
+$sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others, i.head, i.director, i.it_team, i.status FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +31,7 @@ $sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_need
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard Admin</title>
+    <title class="text-uppercase">Dashboard </title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -140,9 +139,10 @@ $sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_need
                                             <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
-                                            <th>Head</th>
+                                            <!-- <th>Head</th> -->
                                             <th>Director</th>
                                             <th>IT</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -153,9 +153,12 @@ $sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_need
                                             <td><a href="admin_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['head']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
+                                            <!-- <td></td> -->
                                             <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
                                             <td><?php echo ($data['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success'>Success</span>"; ?></td>
+                                            <td><?php echo ($data['status']==0) ?"<span class='bg-warning'>Dalam Proses</span>" : "<span class='bg-success'>Done</span>"; ?> <a href="staff_form_status.php?id=<?=$data['id'];?>">Change status <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+</svg></a></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

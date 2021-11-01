@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;
@@ -72,7 +72,7 @@ if (isset($_POST["submit"])) {
                         <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Details Form</h1>
-                        <a href="admin_print.php?id=<?= $datas['id'];?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_BLANK"><i
+                        <a href="print.php?id=<?= $datas['id'];?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_BLANK"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Print Review</a>
                     </div>
                     </div>

@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "head")
+if($_SESSION['level'] != "admin")
 {
     header('location: ../index.php');
     exit;
@@ -16,16 +16,16 @@ $id = $_GET['id'];
 $datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
 
 if (isset($_POST["submit"])) {
-    $test = approveRequestFormHead($_POST);
+    $test = approveRequestForm($_POST);
     if ($test > 0) {
         echo "<script>
             alert('Approve Successfully');
-            document.location.href='departement-head.php';
+            document.location.href='admin_dashboard.php';
             </script>";
     } else {
         echo "<script>
             alert('Approve No Successfully');
-            document.location.href='departement-head.php';
+            console.log('".$test."')
             </script>";
     }
   }
@@ -41,15 +41,14 @@ if (isset($_POST["submit"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>DEPARTEMENT HEAD Request View</title>
+    <title>Admin View Request</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
 
 </head>
-
-<body id="page-top">
-
+<body id="page-top" class="example-screen">
+    
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -67,11 +66,24 @@ if (isset($_POST["submit"])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Status Form</h1>
+                        <a href="print.php?id=<?= $datas['id'];?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_BLANK"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Print Review</a>
+                    </div>
+                    </div>
+                </div>
+
                     <div class="row">
+                        
                         <div class="col-sm-12 mb-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-4">
-                                    <h6 class="m-0 font-weight-bold text-primary">Details and Approve</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Status</h6>
                                 </div>
                             <div class="card-body">
                                 <form action="" method="post">
@@ -79,36 +91,16 @@ if (isset($_POST["submit"])) {
                                         <div class="col-sm-6">
                                             <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
                                             <div class="mb-3">
-                                                <label for="date needed" class="form-label">Date Needed by :</label>
-                                                <input type="text" class="form-control" name="date_needed" id="date_needed" placeholder="<?= $datas['today_date']; ?> " disabled>
+                                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                                <option selected>Open this select menu</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="exampleFormControlTextarea1" class="form-label">Request Choose : </label>
-                                                <textarea class="form-control" name="notes_sharing" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $datas['requests_choose']; ?>" disabled></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="exampleFormControlTextarea1" class="form-label">Note folder/file need to share : </label>
-                                                <textarea class="form-control" name="notes_sharing" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $datas['notes_sharing']; ?>" disabled></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                <textarea class="form-control" name="notes_others" id="notes_other" rows="3" placeholder="<?= $datas['notes_others']; ?>" disabled></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="mb-3">
-                                                <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                <input type="text" class="form-control" placeholder="<?= $datas['requestors_name']; ?>" disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="today date" class="form-label">Edit</label>
-                                                <input type="text" class="form-control"  placeholder="<?= $datas['today_date']; ?>" disabled>
-                                            </div>
-                                                <input type="text" name="head" value="1" hidden>
-                                            <div class="mb-3">
-                                                <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
-                                                <a href="departement-head.php" class="btn btn-warning"> Pending </a>
+                                                <button type="submit" name="submit" class="btn btn-success"><h4>Save</h4></button>
+                                                <a href="admin_dashboard.php" class="btn btn-warning">Cancel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -118,7 +110,7 @@ if (isset($_POST["submit"])) {
                     </div>
                 </div>
                 <!-- /.container-fluid -->
-
+               
             </div>
             <!-- End of Main Content -->
 
