@@ -131,23 +131,25 @@ $t = array_sum($succes[0]);
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th style="width: 5%;">No. ID Request</th>
                                             <th>Requestor Name</th>
                                             <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
-                                            <th>Head Approval</th>
+                                            <th>Director</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($datas as $data): ?>
                                         <tr>
-                                        <td><?= $data['requestors_name']; ?></td>
+                                            <td><?= $data['id']; ?></td>
+                                            <td><?= $data['requestors_name']; ?></td>
                                             <td><a href="director_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['head']==0) ?"Pending" : "Success"; ?></td>
                                             <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
+                                            <td><?php echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>Terselesaikan</span>"; ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

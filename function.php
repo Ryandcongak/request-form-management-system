@@ -14,6 +14,16 @@ function query($query)
     }
     return $rows;
 }
+function queryAdmin($query)
+{
+    global $conn;
+    $result = mysqli_query($conn, $query);
+    $rows = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    return $rows;
+}
 
 
 /* ===================================================REQUEST FORM CREATE==============================================================================*/
@@ -29,7 +39,7 @@ function requestForm($data)
     $notes_others = htmlspecialchars($data['notes_others']);
     $status = htmlspecialchars($data['status']);
     $id_author = $_SESSION['users_id'];
-    
+
         $query = "INSERT INTO tb_requests VALUES 
         ('',
             '$requestors_name',
@@ -38,7 +48,6 @@ function requestForm($data)
             '$requests_choose',
             '$notes_sharing',
             '$notes_others',
-            '',
             '',
             '',
             '$status',
@@ -59,14 +68,14 @@ function approveRequestForm($data)
 
     return mysqli_affected_rows($conn);
 }
-function approveRequestFormHead($data)
+function statusOK($data)
 {
     global $conn;
 
     $id = $data["id"];
-    $head = $data["head"];
+    $head = $data["status"];
 
-    $query = "UPDATE `tb_requests` SET `head` = '$head' WHERE `tb_requests`.`id` = '$id'; ";
+    $query = "UPDATE `tb_requests` SET `status` = '$head' WHERE `tb_requests`.`id` = '$id'; ";
     mysqli_query($conn, $query);
 
     return mysqli_affected_rows($conn);
@@ -87,7 +96,7 @@ function approveRequestFormDirector($data)
 
 function search($keyword)
 {
-    $query = "SELECT*FROM tb_requests WHERE requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%'";
+    $query = "SELECT*FROM tb_requests WHERE id LIKE '%$keyword%' OR requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%'";
     return query($query);
 }
 

@@ -84,6 +84,10 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
+                                                        <label for="kode_request">No. ID Request</label>
+                                                        <input type="text" class="form-control" placeholder="<?= $query['id']; ?>" >
+                                                    </div>
+                                                    <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
                                                         <input type="text" class="form-control" placeholder="<?= $query['requestors_name']; ?>" >
                                                     </div>

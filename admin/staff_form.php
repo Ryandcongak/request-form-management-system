@@ -11,18 +11,18 @@ if($_SESSION['level'] != "staff")
 }
 require "../function.php";
 if (isset($_POST["send"])) {
-
-
     if (requestForm($_POST) > 0) {
         echo "<script>
         alert('Request form berhasil dikirim');
         document.location.href='staff_dashboard.php';
         </script>";
+        include("mail.php");
     } else {
         echo "<script>
         alert('Request form gagal terkirim');
         document.location.href='staff_form.php';
-        </script>";
+        </script>";  
+        // echo mysqli_error($conn);
     }
 }
 ?>

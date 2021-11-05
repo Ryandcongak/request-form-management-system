@@ -6,7 +6,7 @@ if (!isset($_SESSION['level'])) {
   header('location: ../index.php');
   exit;
 }
-if($_SESSION['level'] != "admin")
+if($_SESSION['level'] != "it")
 {
     header('location: ../index.php');
     exit;
@@ -16,17 +16,16 @@ $id = $_GET['id'];
 $datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
 
 if (isset($_POST["submit"])) {
-    $test = approveRequestForm($_POST);
-    if ($test > 0) {
+    if (statusOK($_POST) > 0) {
         echo "<script>
-            alert('Approve Successfully');
-            document.location.href='admin_dashboard.php';
-            </script>";
+        alert('Request Terselesaikan');
+        document.location.href='admin_dashboard.php';
+        </script>";
     } else {
         echo "<script>
-            alert('Approve No Successfully');
-            console.log('".$test."')
-            </script>";
+        alert('error');
+        document.location.href='admin_dashboard.php';
+        </script>";
     }
   }
 ?>
@@ -67,17 +66,6 @@ if (isset($_POST["submit"])) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                <div class="row">
-                    <div class="col-sm-12">
-                        <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Status Form</h1>
-                        <a href="print.php?id=<?= $datas['id'];?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_BLANK"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Print Review</a>
-                    </div>
-                    </div>
-                </div>
-
                     <div class="row">
                         
                         <div class="col-sm-12 mb-4">
@@ -91,11 +79,11 @@ if (isset($_POST["submit"])) {
                                         <div class="col-sm-6">
                                             <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
                                             <div class="mb-3">
-                                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                                                <option selected>Open this select menu</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-select form-select-lg mb-3 form-control" name="status" aria-label=".form-select-lg example">
+                                                <option selected><?= ($datas['status']==0)?"Dalam Proses":"Terselesaikan"; ?></option>
+                                                <option value="0"> Dalam Proses</option>
+                                                <option value="1">Terselesaikan</option>
+                                                
                                             </select>
                                             </div>
                                             <div class="mb-3">

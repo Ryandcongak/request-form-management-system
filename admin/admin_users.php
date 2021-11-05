@@ -26,7 +26,7 @@ $total_users = count(query("SELECT * FROM users"));
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?= $_SESSION['level']; ?> Users</title>
+    <title>Halaman Users</title>
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>

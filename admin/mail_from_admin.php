@@ -17,14 +17,14 @@ $mail = new PHPMailer(true);
 
 try {
     //Server settings
-    $mail->SMTPDebug = 2;                      //Enable verbose debug output
+    $mail->SMTPDebug = 0;                      //Enable verbose debug output
     $mail->isSMTP();                                            //Send using SMTP
     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
     $mail->Username   = 'it.indolinen@gmail.com';                     //SMTP username
     $mail->Password   = 'Indolinen2020';                               //SMTP password
-    $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-    $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    $mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
     //Recipients
     $mail->setFrom('agus@indolinen.co.id', 'Request Form');
@@ -32,7 +32,7 @@ try {
     // $mail->addAddress('ellen@example.com');               //Name is optional
     // $mail->addReplyTo('info@example.com', 'Information');
     $mail->addCC('congak.ryand1991@gmail.com');
-    // $mail->addCC('oka@indolinen.co.id');
+    $mail->addCC('oka@indolinen.co.id');
     // $mail->addBCC('bcc@example.com');
 
     //Attachments
@@ -42,12 +42,12 @@ try {
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Indolinen Request Form';
-    // ob_start();
-    // include('data_mail_staff.php');
-    // $mail->Body = ob_get_contents();
-    // ob_end_clean();
-    $mail->Body ='<h1>Indolinen Form Request</h1><hr><h5>Anda memiliki notifikasi Permintaan Request Baru</h5><p>Check link berikut untuk melihatnya</p>
-    <br><a href="http://192.168.1.151/it-request-form/" style="height: 80px; padding: 5px; border-radius: 10px;background-color: cornflowerblue;"> View Request </a>';
+    ob_start();
+    include('mail_done_admin.php');
+    $mail->Body = ob_get_contents();
+    ob_end_clean();
+    // $mail->Body ='<h1>Indolinen Form Request</h1><hr><h5>Anda memiliki notifikasi Permintaan Request Baru</h5><p>Check link berikut untuk melihatnya</p>
+    // <br><a href="http://192.168.1.151/it-request-form/"> View Request </a>';
     // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
