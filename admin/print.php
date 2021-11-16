@@ -67,20 +67,15 @@ $datas = query("SELECT * FROM tb_requests WHERE id ='$id'")[0];
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4 text-center">
-            <h5 class="underline">Departement Head Approve</h5>
-            <h3><?php echo ($datas['head']==0) ?"" : "<span class='fw-bold'>
-            <img src='../assets/ttd/qrcode.png' width='20%'><br>Approved</span>"; ?></h3>
-        </div>
-        <div class="col-sm-4 text-center">
+        <div class="col-sm-6 text-center">
             <h5 class="underline">Knowledge By Director</h5>
             <h3><?php echo ($datas['director']==0) ?"" : "<span class='fw-bold'>
-            <img src='../assets/ttd/qrcode.png' width='20%'><br>Approved</span>"; ?></h3>
+            <img src='../assets/images/approval.png' width='20%'><br>Approved</span>"; ?></h3>
         </div>
-        <div class="col-sm-4 text-center">
+        <div class="col-sm-6 text-center">
             <h5 class="underline">IT Approve</h5>
-            <h3><?php echo ($datas['it_team']==0) ?"" : "<span class='fw-bold'>
-            <img src='../assets/ttd/qrcode.png' width='20%'><br>Approved</span>"; ?></h3>
+            <h3><?php echo ($datas['it_team']==0) ?"" : "
+            <img src='../assets/images/approval.png' width='15%'><br><p>IT Departement</p>"; ?></h3>
         </div>
     </div>
 </div>

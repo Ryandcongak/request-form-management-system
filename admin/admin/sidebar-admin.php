@@ -3,7 +3,7 @@
 
 <!-- Sidebar - Brand -->
 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-    <div class="sidebar-brand-text mx-3">Dasboard Admin</div>
+    <div class="sidebar-brand-text mx-3">Dasboard <?= strtoupper($_SESSION['level']); ?></div>
 </a>
 
 <!-- Divider -->
@@ -13,7 +13,7 @@
 <li class="nav-item active">
     <a class="nav-link" href="admin_dashboard.php">
         <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard <?= $_SESSION['level']; ?></span></a>
+        <span>Dashboard <?= strtoupper($_SESSION['level']); ?></span></a>
 </li>
 <li class="nav-item active">
     <a class="nav-link" href="admin_users.php">

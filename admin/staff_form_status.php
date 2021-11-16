@@ -82,14 +82,24 @@ if (isset($_POST["submit"])) {
                                             <select class="form-select form-select-lg mb-3 form-control" name="status" aria-label=".form-select-lg example">
                                                 <option selected><?= ($datas['status']==0)?"Dalam Proses":"Terselesaikan"; ?></option>
                                                 <option value="0"> Dalam Proses</option>
-                                                <option value="1">Terselesaikan</option>
+                                                <option value="1"> Terselesaikan</option>
                                                 
+                                            </select>
+                                            </div>
+                                            <div class="mb-3">
+                                            <label for="done_by" class="form-label">Diselesaikan oleh</label>
+                                            <select class="form-select form-control" name="done_by" aria-label="Default select example">
+                                                <option selected>Pilih staff IT</option>
+                                                <option value="Agus">Agus</option>
+                                                <option value="Ryan">Ryan</option>
+                                                <option value="Oka">Oka</option>
                                             </select>
                                             </div>
                                             <div class="mb-3">
                                                 <button type="submit" name="submit" class="btn btn-success"><h4>Save</h4></button>
                                                 <a href="admin_dashboard.php" class="btn btn-warning">Cancel</a>
                                             </div>
+                                        </div>
                                         </div>
                                     </div>
                                 </form>

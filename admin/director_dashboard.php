@@ -148,8 +148,8 @@ $t = array_sum($succes[0]);
                                             <td><a href="director_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold'>Success</span>"; ?></td>
-                                            <td><?php echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>Terselesaikan</span>"; ?></td>
+                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold' style='color : #ffffff'>Approved</span>"; ?></td>
+                                            <td><?php echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>DONE</span>"; ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

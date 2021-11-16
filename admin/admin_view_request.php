@@ -124,7 +124,7 @@ if (isset($_POST["submit"])) {
                                                 <input type="text" name="it_team" value="1" hidden>
                                             <div class="mb-3">
                                                 <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
-                                                <a href="admin_dashboard.php" class="btn btn-warning"> Pending </a>
+                                                <a href="admin_dashboard.php" class="btn btn-warning"> Back to Dashboard </a>
                                             </div>
                                         </div>
                                     </div>

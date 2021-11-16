@@ -51,6 +51,7 @@ function requestForm($data)
             '',
             '',
             '$status',
+            '',
             '$id_author')";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
@@ -73,9 +74,10 @@ function statusOK($data)
     global $conn;
 
     $id = $data["id"];
-    $head = $data["status"];
+    $status = $data["status"];
+    $done_by =$data["done_by"];
 
-    $query = "UPDATE `tb_requests` SET `status` = '$head' WHERE `tb_requests`.`id` = '$id'; ";
+    $query = "UPDATE `tb_requests` SET `status` = '$status', `done_by`='$done_by' WHERE `tb_requests`.`id` = '$id'; ";
     mysqli_query($conn, $query);
 
     return mysqli_affected_rows($conn);
@@ -96,7 +98,13 @@ function approveRequestFormDirector($data)
 
 function search($keyword)
 {
-    $query = "SELECT*FROM tb_requests WHERE id LIKE '%$keyword%' OR requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%'";
+    $query = "SELECT * FROM tb_requests WHERE id LIKE '%$keyword%' OR requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%'";
+    return query($query);
+}
+function searchAdmin($keyword)
+{
+    // SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC
+    $query = "SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.id LIKE '%$keyword%' OR i.requestors_name LIKE '%$keyword%' OR i.today_date LIKE '%$keyword%' OR i.date_needed LIKE '%$keyword%'";
     return query($query);
 }
 

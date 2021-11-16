@@ -4,7 +4,7 @@
 <!-- Topbar Search -->
 <?php
 if(isset($_POST['search'])){
-    $sql = search($_POST["keyword"]);
+    $sql = searchAdmin($_POST["keyword"]);
 } 
 ?>
 <form

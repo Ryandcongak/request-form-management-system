@@ -21,7 +21,7 @@
 
 <!-- Heading -->
 <div class="sidebar-heading">
-    Problem Sharing
+    Features
 </div>
 
 <!-- Nav Item - Pages Collapse Menu -->
@@ -29,6 +29,11 @@
     <a class="nav-link" href="staff_form.php">
         <i class="fas fa-fw fa-table"></i>
         <span>Form Request</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="staff_panduan.php">
+        <i class="fas fa-info-circle"></i>
+        <span>Panduan</span></a>
 </li>
 
 <!-- Divider -->

@@ -97,6 +97,8 @@ if (isset($_POST["submit"])) {
                                         <option value="it">IT</option>
                                         <option value="shop">Shop</option>
                                         <option value="warehouse">Warehouse</option>
+                                        <option value="production">Production</option>
+                                        <option value="director">Director</option>
                                     </select>
                                     </div>
                                     <div class="mb-3">

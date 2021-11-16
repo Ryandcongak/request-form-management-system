@@ -108,7 +108,7 @@ if (isset($_POST["submit"])) {
                                                 <input type="text" name="director" value="1" hidden>
                                             <div class="mb-3">
                                                 <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
-                                                <a href="departement-head.php" class="btn btn-warning"> Pending </a>
+                                                <a href="director_dashboard.php" class="btn btn-warning"> Back to Dashboard </a>
                                             </div>
                                         </div>
                                     </div>

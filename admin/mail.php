@@ -27,12 +27,13 @@ try {
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
     //Recipients
-    $mail->setFrom('agus@indolinen.co.id', 'Request Form');
-    $mail->addAddress('congakryand@gmail.com', $_POST['requestors_name']);     //Add a recipient
+    $mail->setFrom('it.indolinen@gmail.com', 'IT Request Form Need Approval');
+    $mail->addAddress('it.indolinen@gmail.com','IT Dept and Director');     //Add a recipient
     // $mail->addAddress('ellen@example.com');               //Name is optional
     // $mail->addReplyTo('info@example.com', 'Information');
-    $mail->addCC('congak.ryand1991@gmail.com');
-    // $mail->addCC('oka@indolinen.co.id');
+    $mail->addCC('it.dept@indolinen.com');
+    $mail->addCC('agus@indolinen.co.id');
+    $mail->addCC('congakryand@gmail.com');
     // $mail->addBCC('bcc@example.com');
 
     //Attachments
@@ -41,13 +42,21 @@ try {
 
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Indolinen Request Form';
+    $mail->Subject = 'Indolinen IT Request Form';
     // ob_start();
     // include('data_mail_staff.php');
     // $mail->Body = ob_get_contents();
     // ob_end_clean();
-    $mail->Body ='<h1>Indolinen Form Request</h1><hr><h5>Anda memiliki notifikasi Permintaan Request Baru</h5><p>Check link berikut untuk melihatnya</p>
-    <br><a href="http://192.168.1.151/it-request-form/" style="height: 80px; padding: 5px; border-radius: 10px;background-color: cornflowerblue;"> View Request </a>';
+    $body = "<h1>Indolinen IT Request Form</h1><hr><br><h3>Hi, You have notification need to approval</h3>";
+    $body .= "Requestors Name : " . strtoupper($_POST['requestors_name']) . "<br>";
+    $body .= "Needed Date : " . $_POST['date_needed'] . "<br>";
+    $body .= "Type Request : " . implode(',',$_POST['requests_choose']) . "<br>";
+    $body .= "Note for Sharing file : " . $_POST['notes_sharing'] . "<br>";
+    $body .= "Others Notes : " . $_POST['notes_others'] . "<br>";
+    
+    $body .= "<p>Please click link below for login and Approve</p><br>";
+    $body .= "<a href='http://192.168.1.151/it-request-form/' style='padding:5px;background-color:lightblue;color:#fff;border-radius:2px;'> View Request </a>";
+    $mail->Body = $body;
     // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
