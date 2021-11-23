@@ -230,3 +230,80 @@ function editusers($data)
 
     return mysqli_affected_rows($conn);
 }
+
+function insertData($table_name, $data)
+{
+    global $conn;
+
+    // convert data to array
+    $key = array_keys($data);
+    $val = array_values($data);
+    $sql = "insert into $table_name(" . implode(', ', $key) . ") values('" . implode("','", $val) . "')";
+
+    $status = mysqli_query($conn, $sql);
+
+    if ($status) {
+        return true;
+    } else {
+        printf("Errormessage: %s\n", mysqli_error($conn));
+        return false;
+    }
+}
+
+function selectAllCustomQuery($query)
+{
+    $sql = $query;
+    $res = array();
+
+    global $conn;
+
+    if ($result = mysqli_query($conn, $sql)) {
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_array($result)) {
+                $res[] = $row;
+            }
+            return $res;
+            mysqli_free_result($result);
+        } else {
+            return 0;
+        }
+    } else {
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+}
+
+function selectConditionQuery($query, $value)
+{
+    global $conn;
+
+    $sql = $query;
+    if ($result = mysqli_query($conn, $sql)) {
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_array($result)) {
+                return $row[$value];
+            }
+
+            mysqli_free_result($result);
+        } else {
+            return 0;
+        }
+    } else {
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+}
+
+function delete($table, $id)
+{
+    global $conn;
+
+    // sql to delete a record
+    $sql = "DELETE FROM $table WHERE id = $id";
+
+    if ($conn->query($sql) === TRUE) {
+        return 1;
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+
+    $conn->close();
+}

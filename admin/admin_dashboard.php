@@ -15,8 +15,15 @@ require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 
-$succes = query("SELECT SUM(it_team) AS success FROM tb_requests");
-$t = array_sum($succes[0]);
+$succes = query("SELECT COUNT(id) AS success FROM tb_requests WHERE it_team = 0");
+$t = count($succes);
+
+function checkTotal($code){
+    return selectConditionQuery("SELECT COUNT(id) AS total FROM tb_requests WHERE status = $code", "total");
+}
+
+$total_rejects = checkTotal(2);
+$total_done = checkTotal(1);
 
 // $jmlperHalaman = 3;
 // $jmlHalaman = ceil($total / $jmlperHalaman);
@@ -77,7 +84,7 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Forms</div>
+                                                Total Request Created</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total; ?></div>
                                         </div>
                                         <div class="col-auto">
@@ -95,8 +102,8 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Form Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p = $total - $t; echo $p;?></div>
+                                                Total Request Waiting For IT Approval</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $t;?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -106,15 +113,33 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                             </div>
                         </div>
 
-                        <!-- Form Success -->
+                        <!-- Form Reject -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Total Request Rejected</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_rejects; ?></div>
+                                        </div>
+                                        <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Done -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Form Success</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
+                                                Total Request Done</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_done; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -139,37 +164,76 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                             <a href="excel_export_admin.php" class="btn btn-success"><i class="bi bi-download"></i> Export to Excel</a>
                         </div>
                         <div class="card-body">
+                            <?php 
+                                if(isset($_GET['del'])){
+                                    ?>
+                                        <div id="alert-hapus" class="alert alert-danger" role="alert">
+                                            <strong>Data telah berhasil dihapus</strong>
+                                        </div>
+                                    <?php
+                                }
+                            ?>                            
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th style="width: 5%;">No. ID Request</th>
                                             <th>Requestor Name</th>
-                                            <th>Departement</th>
+                                            <th>Department</th>
                                             <th>Details</th>
-                                            <th>request date</th>
+                                            <th>Request date</th>
                                             <th>Needed date</th>
                                             <th>Director</th>
                                             <th>IT</th>
                                             <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php 
+                                            $no = 0;
+                                        ?>
                                         <?php foreach($sql as $data): ?>
+                                        <?php $no++; ?>
                                         <tr>
-                                            <td><?= $data['id']; ?></td>
+                                            <td><?= $no; ?></td>
                                             <td><?= $data['requestors_name']; ?></td>
                                             <td><?= $data['depart'];?></td>
                                             <td><a href="admin_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
-                                            <td><?= $data['today_date']; ?></td>
-                                            <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
-                                            <td><?php echo ($data['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
-                                            <td><?php $by=$data['done_by']; echo ($data['status']==0) ?"<span class='bg-warning'>Dalam Proses</span>" : "<span class='bg-success' style='color:#fff'>DONE by $by </span>"; ?> <a href="staff_form_status.php?id=<?=$data['id'];?>"> | <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                            </svg></a> | <a href="admin_delete_request.php?id=<?= $data['id']; ?>" onclick="return confirm('Yakin untuk menghapus form request ini?');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
-                                                    <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
-                                                    </svg></a>
+                                            <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
+                                            <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
+                                            <td><?php echo ($data['director']==0) ? "<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
+                                            <td><?php echo ($data['it_team']==0) ?"<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
+                                            <td>
+                                                <?php 
+                                                    switch($data['status']){
+                                                        case 0 :
+                                                            ?>
+                                                                <span class='badge badge-warning'>In Progress</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 1 :
+                                                            ?>
+                                                                <span class='badge badge-success'>Done</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 2 :
+                                                            ?>
+                                                                <span class='badge badge-danger'>Rejected</span>
+                                                            <?php
+                                                        break;
+                                                    }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="deleteThis(<?=$data['id'];?>)" class="btn btn-danger btn-sm">
+                                                    Delete
+                                                </a>
+                                                <a href="staff_form_status.php?id=<?=$data['id'];?>" class="btn btn-warning btn-sm">
+                                                    Edit
+                                                </a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -226,6 +290,20 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
 
     <!-- Script -->
     <?php require "../assets/style/scripts.php"; ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function deleteThis(id){
+            if(confirm("Are you sure?")){
+                $.ajax({
+                    type: "GET",
+                    url: "admin_delete_request.php?id="+id ,
+                    success: function (response) {
+                        window.open("http://localhost/it-request-form/admin/admin_dashboard.php?del=1","_self");
+                    }
+                });
+            }
+        } 
+    </script>
 
 </body>
 
