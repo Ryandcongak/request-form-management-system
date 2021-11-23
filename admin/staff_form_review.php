@@ -48,7 +48,7 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
             <div id="content">
 
                 <!-- Topbar -->
-                <?php require "staff/nav-staff.php"; ?>
+                <?php require "staff/nav-staff_x.php"; ?>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -65,45 +65,46 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                             <form action="" method="post">
                                             <div class="row">
                                                 <div class="col-sm-6">
+                                                    <input type="text" name="cancelation" value="1" hidden>
                                                     <div class="mb-3">
                                                         <label for="date needed" class="form-label">Date Needed by :</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['date_needed']; ?>">
+                                                        <input type="text" class="form-control" placeholder="<?= $query['date_needed']; ?>" disabled>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Type of Request</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['requests_choose']; ?>"></textarea>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['requests_choose']; ?>" disabled></textarea>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['notes_sharing']; ?>"></textarea>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['notes_sharing']; ?>" disabled></textarea>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                        <textarea class="form-control"  id="notes_other" rows="3" placeholder="<?= $query['notes_others']; ?>"></textarea>
+                                                        <textarea class="form-control"  id="notes_other" rows="3" placeholder="<?= $query['notes_others']; ?>" disabled></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="kode_request">No. ID Request</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['id']; ?>" >
+                                                        <input type="text" class="form-control" placeholder="<?= $query['id']; ?>"  disabled>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['requestors_name']; ?>" >
+                                                        <input type="text" class="form-control" placeholder="<?= $query['requestors_name']; ?>"  disabled>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Departement</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>" >
+                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>"  disabled>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="today date" class="form-label">Today's Date</label>
-                                                        <input type="text" class="form-control"  placeholder="<?= $query['today_date']; ?>" >
+                                                        <input type="text" class="form-control"  placeholder="<?= $query['today_date']; ?>" disabled >
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <a class="btn btn-info"  href="staff_dashboard.php">Back to Dasboard</a>
+                                                    <a class="btn btn-info"  href="staff_dashboard.php" data-bs-toggle="tooltip" data-bs-placement="top" title="Tombol untuk kembali ke Halaman Dashboard">Back to Dasboard</a>
                                                 </div>
                                             </div>
                                             </form>

@@ -17,6 +17,8 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 $succes = query("SELECT SUM(director) AS success FROM tb_requests");
 $t = array_sum($succes[0]);
 
+$selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC")
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -133,6 +135,7 @@ $t = array_sum($succes[0]);
                                         <tr>
                                             <th style="width: 5%;">No. ID Request</th>
                                             <th>Requestor Name</th>
+                                            <th>Departement</th>
                                             <th>Details</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
@@ -141,15 +144,16 @@ $t = array_sum($succes[0]);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($datas as $data): ?>
+                                        <?php foreach($selects as $data): ?>
                                         <tr>
                                             <td><?= $data['id']; ?></td>
                                             <td><?= $data['requestors_name']; ?></td>
+                                            <td><?= $data['depart']; ?></td>
                                             <td><a href="director_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
                                             <td><?= $data['today_date']; ?></td>
                                             <td><?= $data['date_needed']; ?></td>
                                             <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold' style='color : #ffffff'>Approved</span>"; ?></td>
-                                            <td><?php echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>DONE</span>"; ?></td>
+                                            <td><?php $by = $data['done_by']; echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>DONE by $by </span>"; ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

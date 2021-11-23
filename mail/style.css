@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  background-color: #c4c4c4;
+}
+
+.container {
+  display: -ms-grid;
+  display: grid;
+  background-color: blue;
+  height: 100%;
+  -ms-grid-columns: 100%;
+      grid-template-columns: 100%;
+  -ms-grid-rows: 20% 50% 30%;
+      grid-template-rows: 20% 50% 30%;
+  grid-gap: 1rem;
+      grid-template-areas: "header" "body" "footer";
+}
+
+.header {
+  display: block;
+  background-color: pink;
+}
+
+.body {
+  display: block;
+  background-color: white;
+}
+
+.footer {
+  display: block;
+  background-color: silver;
+}
+
+.info-to-approve {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+/*# sourceMappingURL=style.css.map */

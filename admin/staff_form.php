@@ -16,7 +16,7 @@ if (isset($_POST["send"])) {
         alert('Request form berhasil dikirim');
         document.location.href='staff_dashboard.php';
         </script>";
-        include("mail.php");
+        // include("mail.php");
     } else {
         echo "<script>
         alert('Request form gagal terkirim');
@@ -60,7 +60,7 @@ if (isset($_POST["send"])) {
             <div id="content">
 
                 <!-- Topbar -->
-                <?php require "staff/nav-staff.php"; ?>
+                <?php require "staff/nav-staff_x.php"; ?>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -80,7 +80,7 @@ if (isset($_POST["send"])) {
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="date needed" class="form-label">Date Needed by :</label>
-                                                        <input type="date" class="form-control" name="date_needed" id="date_needed">
+                                                        <input type="date" class="form-control" name="date_needed" id="date_needed" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="checkbox" class="from-label "> Type of Request (Choose all that apply)</label>
@@ -126,6 +126,12 @@ if (isset($_POST["send"])) {
                                                                 File Sharing
                                                             </label>
                                                         </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="other" id="flexCheckIndeterminate">
+                                                            <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                Other
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3" id="divSharing">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
@@ -133,13 +139,13 @@ if (isset($_POST["send"])) {
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                        <textarea class="form-control" name="notes_others" id="notes_other" rows="3" placeholder="IInput your other notes"></textarea>
+                                                        <textarea class="form-control" name="notes_others" id="notes_other" rows="3" placeholder="Input your other notes" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" name="requestors_name" placeholder="Name Request">
+                                                        <input type="text" class="form-control" name="requestors_name" placeholder="Name Request" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="depart" class="form-label">Departement</label>

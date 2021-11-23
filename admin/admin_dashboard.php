@@ -18,7 +18,15 @@ $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 $succes = query("SELECT SUM(it_team) AS success FROM tb_requests");
 $t = array_sum($succes[0]);
 
-$sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC");
+// $jmlperHalaman = 3;
+// $jmlHalaman = ceil($total / $jmlperHalaman);
+// $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+// $awalData = ($jmlperHalaman * $halamanAktif) - $jmlperHalaman;
+
+$sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.cancelation, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation = 0 ORDER BY i.today_date DESC");
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -162,12 +170,14 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                                             </svg></a> | <a href="admin_delete_request.php?id=<?= $data['id']; ?>" onclick="return confirm('Yakin untuk menghapus form request ini?');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
                                                     <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
                                                     </svg></a>
-                                        </td>
+                                            </td>
+                                            <td><?= $data['note_from_it'] ?></td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>
                                 </table>
                             </div>
+
                         </div>
                     </div>
 
@@ -186,7 +196,7 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
 
         </div>
         <!-- End of Content Wrapper -->
-
+          
     </div>
     <!-- End of Page Wrapper -->
 

@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(196, 196, 196);
+}
+.container{
+    display: grid;
+    background-color: blue;
+    height: 100%;
+    grid-template-columns: 100%;
+    grid-template-rows: 20% 50% 30%;
+    grid-gap: 1rem;
+    grid-template-areas: 
+    "header"
+    "body"
+    "footer";
+}
+.header{
+    display: block;
+    background-color: pink;
+}
+.body{
+    display: grid;
+    height: 100%;
+    grid-template-rows: ;
+}
+.footer{
+    display: block;
+    background-color: silver;
+}
+.info-to-approve{
+    display: flex;
+    justify-content: center;
+}

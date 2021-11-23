@@ -31,7 +31,7 @@
         <span>Form Request</span></a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="staff_panduan.php">
+    <a class="nav-link disabled" href="staff_panduan.php">
         <i class="fas fa-info-circle"></i>
         <span>Panduan</span></a>
 </li>

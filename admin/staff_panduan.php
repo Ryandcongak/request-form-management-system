@@ -42,7 +42,7 @@ if($_SESSION['level'] != "staff")
             <!-- Main Content -->
             <div id="content">
 
-            <?php require "staff/nav-staff.php"; ?>
+            <?php require "staff/nav-staff_x.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">

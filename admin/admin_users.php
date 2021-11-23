@@ -48,7 +48,7 @@ $total_users = count(query("SELECT * FROM users"));
             <!-- Main Content -->
             <div id="content">
 
-                <?php require "admin/nav-admin.php"; ?>
+                <?php require "admin/nav-admin_x.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">

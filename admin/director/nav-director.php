@@ -9,7 +9,7 @@
 <!-- Topbar Search -->
 <?php
 if(isset($_POST['search'])){
-    $datas = search($_POST["keyword"]);
+    $selects = search($_POST["keyword"]);
 } 
 ?>
 <form

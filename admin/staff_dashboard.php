@@ -14,7 +14,8 @@ if($_SESSION['level'] != "staff")
 require "../function.php";
 $id_author =$_SESSION['users_id'];
 $total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
+$canceltotal = query("SELECT SUM(cancelation) AS cancel FROM tb_requests WHERE id_users = $id_author");
+$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = '0'");
 
 
 $succes = query("SELECT SUM(it_team) AS success FROM tb_requests WHERE id_users = $id_author");
@@ -90,7 +91,7 @@ $t = array_sum($succes[0]);
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p=$total-$t; echo $p; ?></div>
                                         </div>
                                         <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -114,6 +115,23 @@ $t = array_sum($succes[0]);
                                 </div>
                             </div>
                         </div>
+                        <!-- Form Success -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Form Cancel</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= array_sum($canceltotal[0]); ?></div>
+                                        </div>
+                                        <div class="col-auto">
+                                        <i class="fas material-icons fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -127,13 +145,14 @@ $t = array_sum($succes[0]);
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Data Request</h6>
+                            <a href="excel_export_staff.php" class="btn btn-success"><i class="bi bi-download"></i> Export to Excel</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th style="10%">No. ID Request</th>
+                                            <th style="width: 5%;">No.ID Request</th>
                                             <th>Type Request</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
@@ -150,12 +169,33 @@ $t = array_sum($succes[0]);
                                             <td><?= $staff['requests_choose']; ?></td>
                                             <td><?= $staff['today_date']; ?></td>
                                             <td><?= $staff['date_needed']; ?></td>
-                                            <!-- <td></td> -->
-                                            <td><?php echo ($staff['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
-                                            <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
-                                            <td><?php echo ($staff['status']==0) ?"<span class='bg-warning'>Dalam Proses</span>" : "<span class='bg-success' style='color:#fff'>DONE</span>";?></td>
+                                            <td><?php echo ($staff['director']==0) ?"<span class='bg-warning' style='color:#fff'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
+                                            <td><?php echo ($staff['it_team']==0) ?"<span class='bg-warning' style='color:#fff'>Pending</span>" : "<span class='bg-success' style='color:#fff'>Approved</span>"; ?></td>
+                                            <td><?php $by = $staff['done_by']; echo ($staff['status']==0) ?"<span class='bg-warning' style='color:#fff'>Dalam Proses</span>" : "<span class='bg-success' style='color:#fff'>DONE by $by </span>";?></td>
                                             <td class="text-center">
-                                                <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="m-4">Review Details</a></td>
+                                                <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="btn btn-primary my-1">Review Details</a>
+                                            <form action="" method="post">
+                                                <input type="text" name="id" value="<?= $staff['id']; ?>" hidden>
+                                                <input type="text" name="cancelation" value="1" hidden>
+                                                <button type="submit" name="submit" class="btn btn-danger" onclick="alert('Benar ingin membatalkan?')">CANCEL</button>
+                                            </form>
+                                                <?php
+                                                if(isset($_POST['submit'])){
+                                                    if (statusCancel($_POST) > 0) {
+                                                        echo "<script>
+                                                        document.location.href='staff_dashboard.php';
+                                                        </script>";
+                                                        header('Refresh:0');
+                                                    } else {
+                                                        echo "<script>
+                                                        alert('Request tidak berhasil di cancel');
+                                                        document.location.href='staff_dashboard.php';
+                                                        </script>";
+                                                        header('Refresh:0');
+                                                    }   
+                                                } 
+                                                ?>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>
