@@ -12,16 +12,12 @@ if($_SESSION['level'] != "staff")
 require "../function.php";
 if (isset($_POST["send"])) {
     if (requestForm($_POST) > 0) {
-        echo "<script>
-        alert('Request form berhasil dikirim');
-        document.location.href='staff_dashboard.php';
-        </script>";
+        header('location:'.$_SERVER['PHP_SELF'].'?er=0');
+        exit;
         // include("mail.php");
     } else {
-        echo "<script>
-        alert('Request form gagal terkirim');
-        document.location.href='staff_form.php';
-        </script>";  
+        header('location:'.$_SERVER['PHP_SELF'].'?er=1');
+        exit;
         // echo mysqli_error($conn);
     }
 }
@@ -74,95 +70,105 @@ if (isset($_POST["send"])) {
                                             <h6 class="m-0 font-weight-bold text-primary">Form Request</h6>
                                         </div>
                                         <div class="card-body">
+                                            <?php 
+                                                if(isset($_GET['er'])){
+                                                    ?>
+                                                        <div class="alert alert-<?php echo ($_GET['er'] == 0) ? 'success' : 'danger'; ?>" role="alert">
+                                                            <strong><?php echo ($_GET['er'] == 0) ? 'Penyimpanan Berhasil' : 'Penyimpanan Gagal'; ?></strong>
+                                                        </div>
+                                                        
+                                                    <?php
+                                                }
+                                            ?>
                                             <form action="" method="post">
                                                 <input type="text" name="status" id="status" value="0" hidden>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="mb-3">
-                                                        <label for="date needed" class="form-label">Date Needed by :</label>
-                                                        <input type="date" class="form-control" name="date_needed" id="date_needed" required>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="mb-3">
+                                                            <label for="date needed" class="form-label">Date Needed by :</label>
+                                                            <input type="date" class="form-control" name="date_needed" id="date_needed" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="checkbox" class="from-label "> Type of Request (Choose all that apply)</label>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="hardware" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Hardware (Computer, Printer, etc)
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="networking" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Networking
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="windows login" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Windows Login
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="email" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Email
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="server access" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Server Access
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="cs software" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    CS Software (Set up, login user, ect)
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="file sharing" id="flexCheckIndeterminate" onclick="myFunction()">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    File Sharing
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="requests_choose[]" value="other" id="flexCheckIndeterminate">
+                                                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                                                    Other
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3" id="divSharing">
+                                                            <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
+                                                            <textarea class="form-control" name="notes_sharing" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
+                                                            <textarea class="form-control" name="notes_others" id="notes_other" rows="3" placeholder="Input your other notes" required></textarea>
+                                                        </div>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="checkbox" class="from-label "> Type of Request (Choose all that apply)</label>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="hardware" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Hardware (Computer, Printer, etc)
-                                                            </label>
+                                                    <div class="col-sm-6">
+                                                        <div class="mb-3">
+                                                            <label for="requestor name" class="form-label">Requestor's Name</label>
+                                                            <input type="text" class="form-control" name="requestors_name" placeholder="Name Request" required>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="networking" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Networking
-                                                            </label>
+                                                        <div class="mb-3">
+                                                            <label for="depart" class="form-label">Departement</label>
+                                                            <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>" disabled>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="windows login" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Windows Login
-                                                            </label>
+                                                        <div class="mb-3">
+                                                            <label for="today date" class="form-label">Today's Date</label>
+                                                            <input type="date" class="form-control"  value="<?php $today = date("Y-m-d"); echo $today; ?>" disabled>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="email" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Email
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="server access" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Server Access
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="cs software" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                CS Software (Set up, login user, ect)
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="file sharing" id="flexCheckIndeterminate" onclick="myFunction()">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                File Sharing
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="requests_choose[]" value="other" id="flexCheckIndeterminate">
-                                                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                                                Other
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3" id="divSharing">
-                                                        <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
-                                                        <textarea class="form-control" name="notes_sharing" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                        <textarea class="form-control" name="notes_others" id="notes_other" rows="3" placeholder="Input your other notes" required></textarea>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="mb-3">
-                                                        <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" name="requestors_name" placeholder="Name Request" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="depart" class="form-label">Departement</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>" disabled>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="today date" class="form-label">Today's Date</label>
-                                                        <input type="date" class="form-control"  value="<?php $today = date("Y-m-d"); echo $today; ?>" disabled>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <button type="submit" name="send" class="btn btn-primary">Send</button>
+                                                        <button type="reset" class="btn btn-secondary">Reset</button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <button type="submit" name="send" class="btn btn-primary">Send</button>
-                                                    <button type="reset" class="btn btn-secondary">Reset</button>
-                                                </div>
-                                            </div>
                                             </form>
                                         </div>
                                 </div>

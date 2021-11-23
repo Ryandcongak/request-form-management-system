@@ -13,13 +13,20 @@ if($_SESSION['level'] != "staff")
 }
 require "../function.php";
 $id_author =$_SESSION['users_id'];
-$total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author"));
+$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
+$total = count($staffs);
 
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = '0'");
+$succes = query("SELECT COUNT(id) AS success FROM tb_requests WHERE id_users = $id_author AND it_team = 0");
+$t = count($succes);
 
+function checkTotal($code, $id){
+    return selectConditionQuery("SELECT COUNT(id) AS total FROM tb_requests WHERE id_users = $id AND status = $code", "total");
+}
 
-$succes = query("SELECT SUM(it_team) AS success FROM tb_requests WHERE id_users = $id_author");
-$t = array_sum($succes[0]);
+$total_rejects = checkTotal(2, $id_author);
+$total_done = checkTotal(1, $id_author);
+
+$no = 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +76,7 @@ $t = array_sum($succes[0]);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Request</div>
+                                                Total Request Created</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total; ?></div>
                                         </div>
                                         <div class="col-auto">
@@ -87,8 +94,8 @@ $t = array_sum($succes[0]);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Waiting to Approve</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p=$total-$t; echo $p; ?></div>
+                                            TOTAL REQUEST WAITING FOR IT APPROVAL</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
@@ -100,13 +107,13 @@ $t = array_sum($succes[0]);
 
                         <!-- Form Success -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Request Approved</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                            TOTAL REQUEST REJECTED</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_rejects; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -117,18 +124,18 @@ $t = array_sum($succes[0]);
                         </div>
                         <!-- Form Success -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                Request Reject</div>
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            TOTAL REQUEST DONE</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                             
+                                             <?= $total_done ?>
                                             </div>
                                         </div>
                                         <div class="col-auto">
-                                        <i class="fas material-icons fa-2x text-gray-300"></i>
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -154,7 +161,7 @@ $t = array_sum($succes[0]);
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th style="width: 5%;">No.ID Request</th>
+                                            <th style="width: 5%;">No</th>
                                             <th>Type Request</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
@@ -166,75 +173,58 @@ $t = array_sum($succes[0]);
                                     </thead>
                                     <tbody>
                                         <?php foreach($staffs as $staff): ?>
+                                        <?php $no++; ?>
+                                        <?php 
+                                            // kome to array
+                                            $types = $staff['requests_choose'];
+                                            $types_array = explode(',', $types);
+                                        ?>
                                         <tr>
-                                            <td><?= $staff['id']; ?></td>
-                                            <td><?= $staff['requests_choose']; ?></td>
-                                            <td><?= $staff['today_date']; ?></td>
-                                            <td><?= $staff['date_needed']; ?></td>
-                                            <td><?php 
-                                            if($staff['director']==0){
-                                                echo "<div class='alert alert-warning' role='alert'>
-                                                Pending
-                                              </div>";
-                                            }
-                                            elseif($staff['director']==1)
-                                            {
-                                                echo "<div class='alert alert-success' role='alert'>
-                                                Aprooved
-                                              </div>";
-                                            }
-                                            elseif($staff['director']==2){
-                                                echo "<div class='alert alert-danger' role='alert'>
-                                                Rejected
-                                              </div>";
-                                            }
-                                            ?></td>
-                                            <td><?php
-                                            if($staff['it_team']==0){
-                                                echo "<div class='alert alert-warning' role='alert'>
-                                                Pending
-                                              </div>";
-                                            }
-                                            elseif($staff['it_team']==1)
-                                            {
-                                                echo "<div class='alert alert-success' role='alert'>
-                                                Aprooved
-                                              </div>";
-                                            }
-                                            elseif($staff['it_team']==2){
-                                                echo "<div class='alert alert-danger' role='alert'>
-                                                Rejected
-                                              </div>";
-                                            }
-                                            ?>
+                                            <td><?= $no; ?></td>
+                                            <td>
+                                                <?php 
+                                                    for($i = 0; $i < count($types_array); $i++){
+                                                        ?>
+                                                            <span class='badge badge-primary'><?= $types_array[$i]; ?></span>
+                                                        <?php
+                                                    }
+                                                ?>
                                             </td>
-                                            <td><?php 
-                                            $by = $staff['done_by'];
-                                            if($staff['done_by']==0){
-                                                echo "<div class='alert alert-warning' role='alert'>
-                                                In Proses
-                                              </div>";
-                                            }
-                                            elseif($staff['done_by']==1)
-                                            {
-                                                echo "<div class='alert alert-success' role='alert'>
-                                                Done by $by
-                                              </div>";
-                                            }
-                                            elseif($staff['done_by']==2){
-                                                echo "<div class='alert alert-danger' role='alert'>
-                                                Rejected
-                                              </div>";
-                                            }
-                                            ?>
+                                            <td><?= date("D, d F Y", strtotime($staff['today_date'])); ?></td>
+                                            <td><?= date("D, d F Y", strtotime($staff['date_needed'])); ?></td>
+                                            <td><?php echo ($staff['director']==0) ? "<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
+                                            <td><?php echo ($staff['it_team']==0) ?"<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
+                                            <td>
+                                                <?php 
+                                                    switch($staff['status']){
+                                                        case 0 :
+                                                            ?>
+                                                                <span class='badge badge-warning'>In Progress</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 1 :
+                                                            ?>
+                                                                <span class='badge badge-success'>Done</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 2 :
+                                                            ?>
+                                                                <span class='badge badge-danger'>Rejected</span>
+                                                            <?php
+                                                        break;
+                                                    }
+                                                ?>
                                             </td>
-                                            <td class="text-center">
-                                                <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="btn btn-primary my-1">Review Details</a>
-                                            <form action="" method="post">
-                                                <input type="text" name="id" value="<?= $staff['id']; ?>" hidden>
-                                                <input type="text" name="cancelation" value="1" hidden>
-                                                <button type="submit" name="submit" class="btn btn-danger" onclick="alert('Benar ingin membatalkan?')">CANCEL</button>
-                                            </form>
+                                            <td class="text-center form-inline">
+                                                <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="btn btn-primary btn-sm my-1" style="margin-right: 5px;">Review Details</a>
+
+                                                <form class="" action="" method="post">
+                                                    <input type="text" name="id" value="<?= $staff['id']; ?>" hidden>
+                                                    <input type="text" name="cancelation" value="1" hidden>
+                                                    <button type="submit" name="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Cancel</button>
+                                                </form>
                                                 <?php
                                                 if(isset($_POST['submit'])){
                                                     if (statusCancel($_POST) > 0) {
