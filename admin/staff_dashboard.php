@@ -16,7 +16,7 @@ $id_author =$_SESSION['users_id'];
 $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
 $total = count($staffs);
 
-$succes = query("SELECT COUNT(id) AS success FROM tb_requests WHERE id_users = $id_author AND it_team = 0");
+$succes = query("SELECT id FROM tb_requests WHERE id_users = $id_author AND it_team = 0");
 $t = count($succes);
 
 function checkTotal($code, $id){
