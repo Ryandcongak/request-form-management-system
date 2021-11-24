@@ -158,91 +158,137 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                         <div class="col-lg-12 mb-4">
 
                             <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Request</h6>
-                            <a href="excel_export_admin.php" class="btn btn-success"><i class="bi bi-download"></i> Export to Excel</a>
-                        </div>
-                        <div class="card-body">
-                            <?php 
-                                if(isset($_GET['del'])){
-                                    ?>
-                                        <div id="alert-hapus" class="alert alert-danger" role="alert">
-                                            <strong>Data telah berhasil dihapus</strong>
-                                        </div>
-                                    <?php
-                                }
-                            ?>                            
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 5%;">No. ID Request</th>
-                                            <th>Requestor Name</th>
-                                            <th>Department</th>
-                                            <th>Details</th>
-                                            <th>Request date</th>
-                                            <th>Needed date</th>
-                                            <th>Director</th>
-                                            <th>IT</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php 
-                                            $no = 0;
-                                        ?>
-                                        <?php foreach($sql as $data): ?>
-                                        <?php $no++; ?>
-                                        <tr>
-                                            <td><?= $no; ?></td>
-                                            <td><?= $data['requestors_name']; ?></td>
-                                            <td><?= $data['depart'];?></td>
-                                            <td><a href="admin_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
-                                            <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
-                                            <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
-                                            <td><?php echo ($data['director']==0) ? "<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
-                                            <td><?php echo ($data['it_team']==0) ?"<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
-                                            <td>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Data Request</h6>
+                                    <a href="excel_export_admin.php" class="btn btn-success"><i class="bi bi-download"></i> Export to Excel</a>
+                                </div>
+                                <div class="card-body">
+                                    <?php 
+                                        if(isset($_GET['del'])){
+                                            ?>
+                                                <div id="alert-hapus" class="alert alert-danger" role="alert">
+                                                    <strong>Data telah berhasil dihapus</strong>
+                                                </div>
+                                            <?php
+                                        }
+                                    ?>                            
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No. ID Request</th>
+                                                    <th>Requestor Name</th>
+                                                    <th>Department</th>
+                                                    <th>Details</th>
+                                                    <th>Request date</th>
+                                                    <th>Needed date</th>
+                                                    <th>Director</th>
+                                                    <th>IT</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                                 <?php 
-                                                    switch($data['status']){
-                                                        case 0 :
-                                                            ?>
-                                                                <span class='badge badge-warning'>In Progress</span>
-                                                            <?php
-                                                        break;
-
-                                                        case 1 :
-                                                            ?>
-                                                                <span class='badge badge-success'>Done</span>
-                                                            <?php
-                                                        break;
-
-                                                        case 2 :
-                                                            ?>
-                                                                <span class='badge badge-danger'>Rejected</span>
-                                                            <?php
-                                                        break;
-                                                    }
+                                                    $no = 0;
                                                 ?>
-                                            </td>
-                                            <td>
-                                                <a href="#" onclick="deleteThis(<?=$data['id'];?>)" class="btn btn-danger btn-sm">
-                                                    Delete
-                                                </a>
-                                                <a href="staff_form_status.php?id=<?=$data['id'];?>" class="btn btn-warning btn-sm">
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <?php endforeach; ?>
-                                </table>
-                            </div>
+                                                <?php foreach($sql as $data): ?>
+                                                <?php $no++; ?>
+                                                <tr>
+                                                    <td><?= $no; ?></td>
+                                                    <td><?= $data['requestors_name']; ?></td>
+                                                    <td><?= $data['depart'];?></td>
+                                                    <td>
+                                                        <button type="button" onclick="openModalDetails(<?= $data['id'];?>)" class="btn btn-primary btn-sm">View Detail</button>
+                                                    </td>
+                                                    <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
+                                                    <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
+                                                    <td>
+                                                    <?php 
+                                                        switch($data['director']){
+                                                            case 0 :
+                                                                ?>
+                                                                    <span class='badge badge-warning'>Pending</span>
+                                                                <?php
+                                                            break;
 
-                        </div>
-                    </div>
+                                                            case 1 :
+                                                                ?>
+                                                                    <span class='badge badge-success'>Approved</span>
+                                                                <?php
+                                                            break;
+
+                                                            case 2 :
+                                                                ?>
+                                                                    <span class='badge badge-danger'>Rejected</span>
+                                                                <?php
+                                                            break;
+                                                        }
+                                                    ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                            switch($data['it_team']){
+                                                                case 0 :
+                                                                    ?>
+                                                                        <span class='badge badge-warning'>Pending</span>
+                                                                    <?php
+                                                                break;
+
+                                                                case 1 :
+                                                                    ?>
+                                                                        <span class='badge badge-success'>Approved</span>
+                                                                    <?php
+                                                                break;
+
+                                                                case 2 :
+                                                                    ?>
+                                                                        <span class='badge badge-danger'>Rejected</span>
+                                                                    <?php
+                                                                break;
+                                                            }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                            switch($data['status']){
+                                                                case 0 :
+                                                                    ?>
+                                                                        <span class='badge badge-warning'>In Progress</span>
+                                                                    <?php
+                                                                break;
+
+                                                                case 1 :
+                                                                    ?>
+                                                                        <span class='badge badge-success'>Done</span>
+                                                                    <?php
+                                                                break;
+
+                                                                case 2 :
+                                                                    ?>
+                                                                        <span class='badge badge-danger'>Rejected</span>
+                                                                    <?php
+                                                                break;
+                                                            }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" onclick="deleteThis(<?=$data['id'];?>)" class="btn btn-danger btn-sm">
+                                                            Delete
+                                                        </a>
+                                                        <a href="staff_form_status.php?id=<?=$data['id'];?>" class="btn btn-warning btn-sm">
+                                                            Edit
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <?php endforeach; ?>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -287,10 +333,32 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
             </div>
         </div>
     </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modal_details" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <input type="hidden" id="id_modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Detail Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modal_contents" class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="printOut()"><i class="fa fa-print"></i> Print</button>
+                    <button type="button" class="btn btn-primary" onclick="changeStatus('it_team', 1)"><i class="fa fa-pencil-alt"></i> Approve</button>
+                    <button type="button" class="btn btn-danger" onclick="changeStatus('it_team', 2)"><i class="fa fa-times"></i> Rejected</button>
+                    <button type="button" class="btn btn-warning" onclick="changeStatus('it_team', 0)"><i class="fa fa-search"></i> Pending</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
     <!-- Script -->
     <?php require "../assets/style/scripts.php"; ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         function deleteThis(id){
             if(confirm("Are you sure?")){
@@ -302,6 +370,41 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                     }
                 });
             }
+        } 
+
+        function openModalDetails(id){
+            var modal = new bootstrap.Modal(document.getElementById('modal_details'));
+
+            $("#modal_contents").load("ajax/admin_view.php?id="+id);
+            $("#id_modal").val(id);
+
+            modal.show();
+        }
+
+        function changeStatus(kolom, status){
+            if(confirm("Are you sure?")){
+                $.ajax({
+                    type: "POST",
+                    url: "ajax/admin_controller.php?mode=update",
+                    data: {
+                        "kolom":kolom,
+                        "status":status,
+                        "id":$("#id_modal").val()
+                    },
+                    success: function (response) {
+                        if(response == 1){
+                            window.location.reload();
+                        } else {
+                            alert("Failed, Ask IT");
+                        }
+                    }
+                });
+            }
+        }
+
+        function printOut(){
+            id = $("#id_modal").val();
+            window.open("print.php?id="+id, "_blank");
         } 
     </script>
 

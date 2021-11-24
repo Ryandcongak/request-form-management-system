@@ -307,3 +307,17 @@ function delete($table, $id)
 
     $conn->close();
 }
+
+function updateTable($query){
+    global $conn;
+
+    $sql = $query;
+
+    if (mysqli_query($conn, $sql)) {
+        echo 1;
+    } else {
+        echo 0;
+    }
+
+    mysqli_close($conn);
+}
