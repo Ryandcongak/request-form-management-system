@@ -15,7 +15,7 @@ require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
 
-$succes = query("SELECT COUNT(id) AS success FROM tb_requests WHERE it_team = 0");
+$succes = query("SELECT id AS success FROM tb_requests WHERE it_team = 0");
 $t = count($succes);
 
 function checkTotal($code){
