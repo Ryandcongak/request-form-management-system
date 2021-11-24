@@ -14,10 +14,18 @@ if($_SESSION['level'] != "director")
 require "../function.php";
 $total = count(query("SELECT * FROM tb_requests"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
-$succes = query("SELECT SUM(director) AS success FROM tb_requests");
-$t = array_sum($succes[0]);
+$waiting = query("SELECT id AS success FROM tb_requests WHERE director = 0");
+$t = count($waiting);
+$rejected = query("SELECT id AS success FROM tb_requests WHERE director = 2");
+$r = count($rejected);
+function checkTotal($code){
+    return selectConditionQuery("SELECT COUNT(id) AS total FROM tb_requests WHERE status = $code", "total");
+}
 
-$selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC")
+$total_rejects = checkTotal(2);
+$total_done = checkTotal(1);
+
+$selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC")
 
 ?>
 <!DOCTYPE html>
@@ -68,7 +76,7 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Forms</div>
+                                                Total Request Created</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total; ?></div>
                                         </div>
                                         <div class="col-auto">
@@ -86,8 +94,8 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Form Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php $p = $total-$t; echo $p; ?></div>
+                                            Total Request Waiting For Director Approval</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $t; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -97,15 +105,33 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                             </div>
                         </div>
 
-                        <!-- Form Success -->
+                        <!-- Form Reject  -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Total Request Rejected</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $r; ?></div>
+                                        </div>
+                                        <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Done -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Form Success</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $t; ?></div>
+                                                Total Status Done</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_done; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -134,6 +160,7 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                     <thead>
                                         <tr>
                                             <th style="width: 5%;">No. ID Request</th>
+                                            <th>Request Code</th>
                                             <th>Requestor Name</th>
                                             <th>Departement</th>
                                             <th>Details</th>
@@ -144,16 +171,73 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($selects as $data): ?>
+                                        <?php
+                                        $no = 0;
+                                         foreach($selects as $data):
+                                         $no++; ?>
                                         <tr>
-                                            <td><?= $data['id']; ?></td>
-                                            <td><?= $data['requestors_name']; ?></td>
+                                            <td><?= $no; ?></td>
+                                            <td><?= $data['rq_code']; ?></td>
+                                            <td><?= $data['requestors_name']; ?>
+                                            <?php
+                                            if($data['note']=="")
+                                            {
+                                                echo "";
+                                            }
+                                            else{
+                                                echo "<span class='badge bg-dark text-white'>Note</span>";
+                                            }
+                                             ?>
+                                            </td>
                                             <td><?= $data['depart']; ?></td>
-                                            <td><a href="director_view_request.php?id=<?= $data['id'];?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
-                                            <td><?= $data['today_date']; ?></td>
-                                            <td><?= $data['date_needed']; ?></td>
-                                            <td><?php echo ($data['director']==0) ?"<span class='bg-warning'>Pending</span>" : "<span class='bg-success fw-bold' style='color : #ffffff'>Approved</span>"; ?></td>
-                                            <td><?php $by = $data['done_by']; echo ($data['status']==0) ?"Dalam Proses" : "<span class='bg-success fw-bold' style='color : #ffffff'>DONE by $by </span>"; ?></td>
+                                            <td><a href="director_view_request.php?id=<?= $data['id'];?>" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
+                                            <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
+                                            <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
+                                            <td><?php 
+                                            
+                                            switch($data['director'])
+                                            {
+                                                case 0 : 
+                                                    ?>
+                                                    <span class='badge badge-warning'>Pending</span>
+                                                    <?php
+                                                    break;
+                                                case 1 : 
+                                                    ?>
+                                                    <span class='badge badge-success'>Approved</span>
+                                                    <?php
+                                                    break; 
+                                                case 2 :
+                                                    ?> 
+                                                    <span class='badge badge-danger'>Rejected</span> 
+                                                    <?php
+                                                    break;
+                                            }
+                                            ?></td>
+                                            <td>
+                                            <?php
+                                                $by = $data['done_by'];
+                                                    switch($data['status']){
+                                                        case 0 :
+                                                            ?>
+                                                                <span class='badge badge-warning'>In Progress</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 1 :
+                                                            ?>
+                                                                <span class='badge badge-success'>Done <?= $by; ?></span>
+                                                            <?php
+                                                        break;
+
+                                                        case 2 :
+                                                            ?>
+                                                                <span class='badge badge-danger'>Rejected</span>
+                                                            <?php
+                                                        break;
+                                                    }
+                                                ?>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     <?php endforeach; ?>

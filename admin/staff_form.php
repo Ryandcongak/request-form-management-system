@@ -80,6 +80,18 @@ if (isset($_POST["send"])) {
                                                     <?php
                                                 }
                                             ?>
+                                            <?php 
+                                                $query = "SELECT max(rq_code) as maxKode FROM tb_requests";
+                                                $hasil = mysqli_query($conn, $query);
+                                                $data  = mysqli_fetch_array($hasil);
+                                                $codeRequest = $data['maxKode'];
+                                                
+                                                $noUrut = (int) substr($codeRequest, 3, 3);
+                                                
+                                                $noUrut++;
+                                                $char = "RQ";
+                                                $newID = $char . sprintf("%03s", $noUrut);
+                                            ?>
                                             <form action="" method="post">
                                                 <input type="text" name="status" id="status" value="0" hidden>
                                                 <div class="row">
@@ -149,6 +161,9 @@ if (isset($_POST["send"])) {
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
+                                                        
+                                                            <input type="text" name="rq_code" class="form-control" value="<?= $newID; ?>" hidden>
+                                                        
                                                         <div class="mb-3">
                                                             <label for="requestor name" class="form-label">Requestor's Name</label>
                                                             <input type="text" class="form-control" name="requestors_name" placeholder="Name Request" required>

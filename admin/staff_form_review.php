@@ -62,43 +62,112 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                             <h6 class="m-0 font-weight-bold text-primary">Review Form</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="" method="post">
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <input type="text" name="cancelation" value="1" hidden>
                                                     <div class="mb-3">
                                                         <label for="date needed" class="form-label">Date Needed by :</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['date_needed']; ?>" disabled>
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text"><?= date("D, d F Y", strtotime($query['date_needed'])); ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <?php 
+                                                        // kome to array
+                                                        $types = $query['requests_choose'];
+                                                        $types_array = explode(',', $types);
+                                                    ?>
                                                     <div class="mb-3">
                                                         <label for="exampleFormControlTextarea1" class="form-label">Type of Request</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['requests_choose']; ?>" disabled></textarea>
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text">
+                                                                <?php 
+                                                                    for($i = 0; $i < count($types_array); $i++){
+                                                                        ?>
+                                                                            <span class='badge badge-primary'><?= $types_array[$i]; ?></span>
+                                                                        <?php
+                                                                    }
+                                                                ?>    
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlTextarea1" class="form-label">Please note folder/file need to share</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="<?= $query['notes_sharing']; ?>" disabled></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlTextarea1" class="form-label">Other Notes :</label>
-                                                        <textarea class="form-control"  id="notes_other" rows="3" placeholder="<?= $query['notes_others']; ?>" disabled></textarea>
-                                                    </div>
+                                                    <?php
+                                                    $noteSharing = $query['notes_sharing'];
+                                                    if($noteSharing==""){
+                                                        echo "";
+                                                    }
+                                                    else{
+                                                        echo "<div class='mb-3'>
+                                                        <label for='exampleFormControlTextarea1' class='form-label'>Please note folder/file need to share</label>
+                                                        <div class='card' style='width: 100%;'>
+                                                            <div class='card-body'>
+                                                                <p class='card-text'> $noteSharing </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>";
+                                                    } 
+                                                    ?>
+
+                                                    <?php
+                                                    $noteOthers = $query['notes_others'];
+                                                    if($noteOthers==""){
+                                                        echo "";
+                                                    }
+                                                    else{
+                                                        echo "<div class='mb-3'>
+                                                        <label for='exampleFormControlTextarea1' class='form-label'>Please note folder/file need to share</label>
+                                                        <div class='card' style='width: 100%;'>
+                                                            <div class='card-body'>
+                                                                <p class='card-text'> $noteOthers </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>";
+                                                    } 
+                                                    ?>
+                                                    
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="mb-3">
                                                         <label for="kode_request">No. ID Request</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['id']; ?>"  disabled>
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text"><?= $query['rq_code']; ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Requestor's Name</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $query['requestors_name']; ?>"  disabled>
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text"><?= $query['requestors_name']; ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="requestor name" class="form-label">Departement</label>
-                                                        <input type="text" class="form-control" placeholder="<?= $_SESSION['users_depart']; ?>"  disabled>
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text"><?= $_SESSION['users_depart']; ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="today date" class="form-label">Today's Date</label>
-                                                        <input type="text" class="form-control"  placeholder="<?= $query['today_date']; ?>" disabled >
+                                                        <div class="card" style="width: 100%;">
+                                                            <div class="card-body">
+                                                                <p class="card-text"><?= date("D, d F Y", strtotime($query['today_date'])); ?></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <div class="card bg-warning" style="width: 18rem;">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Note From IT</h5>
+                                                                <p class="card-text"><?= $query['note']; ?></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,7 +176,6 @@ $query = query("SELECT * FROM tb_requests WHERE id= '$id'")[0];
                                                     <a class="btn btn-info"  href="staff_dashboard.php" data-bs-toggle="tooltip" data-bs-placement="top" title="Tombol untuk kembali ke Halaman Dashboard">Back to Dasboard</a>
                                                 </div>
                                             </div>
-                                            </form>
                                         </div>
                                 </div>
                             </div>

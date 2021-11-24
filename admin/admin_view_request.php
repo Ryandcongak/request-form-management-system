@@ -15,7 +15,7 @@ require "../function.php";
 $id = $_GET['id'];
 $datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
 
-if (isset($_POST["submit"])) {
+if (isset($_POST["approve"])) {
     $test = approveRequestForm($_POST);
     if ($test > 0) {
         echo "<script>
@@ -86,10 +86,8 @@ if (isset($_POST["submit"])) {
                                     <h6 class="m-0 font-weight-bold text-primary">Details and Approve</h6>
                                 </div>
                             <div class="card-body">
-                                <form action="" method="post">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
                                             <div class="mb-3">
                                                 <label for="date needed" class="form-label">Date Needed by :</label>
                                                 <input type="text" class="form-control" name="date_needed" id="date_needed" placeholder="<?= $datas['today_date']; ?> " disabled>
@@ -110,6 +108,10 @@ if (isset($_POST["submit"])) {
 
                                         <div class="col-sm-6">
                                             <div class="mb-3">
+                                                <label for="rq_code" class="form-label">Request Code</label>
+                                                <input type="text" class="form-control" placeholder="<?= $datas['rq_code']; ?>" disabled>
+                                            </div>
+                                            <div class="mb-3">
                                                 <label for="requestor name" class="form-label">Requestor's Name</label>
                                                 <input type="text" class="form-control" placeholder="<?= $datas['requestors_name']; ?>" disabled>
                                             </div>
@@ -121,14 +123,21 @@ if (isset($_POST["submit"])) {
                                                 <label for="today date" class="form-label">Edit</label>
                                                 <input type="text" class="form-control"  placeholder="<?= $datas['today_date']; ?>" disabled>
                                             </div>
-                                                <input type="text" name="it_team" value="1" hidden>
                                             <div class="mb-3">
-                                                <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
+                                                <form action="" method="post">
+                                                    <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
+                                                    <input type="text" name="it_team" value="1" hidden>
+                                                    <button type="submit" name="approve" class="btn btn-success"><h4> Approve</h4></button>
+                                                </form>
+                                                <form action="" method="post">
+                                                    <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
+                                                    <input type="text" name="it_team" value="2" hidden>
+                                                    <button type="submit" name="rejected" class="btn btn-danger"><h4> Reject</h4></button>
+                                                </form>
                                                 <a href="admin_dashboard.php" class="btn btn-warning"> Back to Dashboard </a>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>

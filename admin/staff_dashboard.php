@@ -13,7 +13,7 @@ if($_SESSION['level'] != "staff")
 }
 require "../function.php";
 $id_author =$_SESSION['users_id'];
-$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author");
+$staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = 0");
 $total = count($staffs);
 
 $succes = query("SELECT id FROM tb_requests WHERE id_users = $id_author AND it_team = 0");
@@ -162,6 +162,7 @@ $no = 0;
                                     <thead>
                                         <tr>
                                             <th style="width: 5%;">No</th>
+                                            <th>ID request</th>
                                             <th>Type Request</th>
                                             <th>request date</th>
                                             <th>Needed date</th>
@@ -181,6 +182,7 @@ $no = 0;
                                         ?>
                                         <tr>
                                             <td><?= $no; ?></td>
+                                            <td><?= $staff['rq_code']; ?></td>
                                             <td>
                                                 <?php 
                                                     for($i = 0; $i < count($types_array); $i++){
@@ -192,8 +194,60 @@ $no = 0;
                                             </td>
                                             <td><?= date("D, d F Y", strtotime($staff['today_date'])); ?></td>
                                             <td><?= date("D, d F Y", strtotime($staff['date_needed'])); ?></td>
-                                            <td><?php echo ($staff['director']==0) ? "<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
-                                            <td><?php echo ($staff['it_team']==0) ?"<span class='badge badge-warning'>Pending</span>" : "<span class='badge badge-success'>Approved</span>"; ?></td>
+                                            <td>
+                                            <?php 
+                                            
+                                                    switch($staff['director']){
+                                                        case 0 :
+                                                            ?>
+                                                                <span class='badge badge-warning'>Pending</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 1 :
+                                                            ?>
+                                                                <span class='badge badge-success'>Approved</span>
+                                                            <?php
+                                                        break;
+
+                                                        case 2 :
+                                                            ?>
+                                                                <span class='badge badge-danger'>Rejected</span>
+                                                            <?php
+                                                        break;
+                                                    }                                                                
+                                                ?>
+                                            </td>
+                                            <td>
+                                            <?php 
+                                                    switch($staff['it_team']){
+                                                        case 0 :
+                                                            ?>
+                                                                <span class='badge badge-warning'>Pending</span><br>
+                                                            <?php
+                                                        break;
+
+                                                        case 1 :
+                                                            ?>
+                                                                <span class='badge badge-success'>Approved</span><br>
+                                                            <?php
+                                                        break;
+
+                                                        case 2 :
+                                                            ?>
+                                                                <span class='badge badge-danger'>Rejected</span><br>
+                                                            <?php
+                                                        break;
+                                                    }
+                                                    if($staff['note']=="")
+                                                    {
+                                                        echo "";
+                                                    }
+                                                    else{
+                                                        echo "<span class='badge bg-dark text-white'>with Note</span>";
+                                                    }
+                                                ?>
+                                            </td>
                                             <td>
                                                 <?php 
                                                     switch($staff['status']){

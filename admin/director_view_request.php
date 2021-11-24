@@ -14,21 +14,6 @@ if($_SESSION['level'] != "director")
 require "../function.php";
 $id = $_GET['id'];
 $datas = query("SELECT * FROM tb_requests WHERE id = $id")[0];
-
-if (isset($_POST["submit"])) {
-    $test = approveRequestFormDirector($_POST);
-    if ($test > 0) {
-        echo "<script>
-            alert('Approve Successfully');
-            document.location.href='director_dashboard.php';
-            </script>";
-    } else {
-        echo "<script>
-            alert('Approve No Successfully');
-            document.location.href='director_dashboard.php';
-            </script>";
-    }
-  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +48,7 @@ if (isset($_POST["submit"])) {
             <!-- Main Content -->
             <div id="content">
 
-                <?php require "director/nav-director.php"; ?>
+                <?php require "director/nav-director-x.php"; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -74,10 +59,8 @@ if (isset($_POST["submit"])) {
                                     <h6 class="m-0 font-weight-bold text-primary">Details and Approve</h6>
                                 </div>
                             <div class="card-body">
-                                <form action="" method="post">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
                                             <div class="mb-3">
                                                 <label for="date needed" class="form-label">Date Needed by :</label>
                                                 <input type="text" class="form-control" name="date_needed" id="date_needed" placeholder="<?= $datas['today_date']; ?> " disabled>
@@ -103,16 +86,43 @@ if (isset($_POST["submit"])) {
                                             </div>
                                             <div class="mb-3">
                                                 <label for="today date" class="form-label">Edit</label>
-                                                <input type="text" class="form-control"  placeholder="<?= $datas['today_date']; ?>" disabled>
+                                                <input type="text" class="form-control" placeholder="<?= $datas['today_date']; ?>" disabled>
                                             </div>
-                                                <input type="text" name="director" value="1" hidden>
-                                            <div class="mb-3">
-                                                <button type="submit" name="submit" class="btn btn-success"><h4> Approve</h4></button>
-                                                <a href="director_dashboard.php" class="btn btn-warning"> Back to Dashboard </a>
+                                            <div class="mb-3 d-inline-flex d-flex justify-content-between">
+                                                <form action="" method="post">
+                                                    <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
+                                                    <input type="text" name="director" value="1" hidden>
+                                                    <button type="submit" name="action" class="btn btn-sm btn-success mx-1" onclick="return confirm('Are you sure approve this Request?')"><h4>Approve</h4></button>
+                                                </form>
+                                                <form action="" method="post">
+                                                    <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
+                                                    <input type="text" name="director" value="2" hidden>
+                                                    <button type="submit" name="action" class="btn btn-sm btn-danger mx-1" onclick="return confirm('Are you sure reject this Request?')"><h4>Reject</h4></button>
+                                                </form>
+                                                <form action="" method="post">
+                                                    <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
+                                                    <input type="text" name="director" value="0" hidden>
+                                                    <button type="submit" name="action" class="btn btn-sm btn-warning mx-1"><h4>Pending</h4></button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                
+                                <?php
+                                if (isset($_POST["action"])) {
+                                    $test = actionDirector($_POST);
+                                    if ($test > 0) {
+                                        echo "<script>
+                                            alert('Successfully');
+                                            document.location.href='director_dashboard.php';
+                                            </script>";
+                                    } else {
+                                        echo "<script>
+                                            document.location.href='director_dashboard.php';
+                                            </script>";
+                                    }
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>

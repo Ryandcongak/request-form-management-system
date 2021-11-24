@@ -31,6 +31,7 @@ function requestForm($data)
 {
     global $conn;
 
+    $rq_code = $data['rq_code'];
     $requestors_name =htmlspecialchars($data["requestors_name"]) ;
     $today_date = date('Y-m-d');
     $date_needed = htmlspecialchars($data["date_needed"]);
@@ -42,6 +43,7 @@ function requestForm($data)
 
         $query = "INSERT INTO tb_requests VALUES 
         ('',
+            '$rq_code',
             '$requestors_name',
             '$today_date',
             '$date_needed',
@@ -51,6 +53,7 @@ function requestForm($data)
             '',
             '',
             '$status',
+            '',
             '',
             '',
             '$id_author')";
@@ -93,7 +96,7 @@ function statusCancel($data)
     mysqli_query($conn,$query);
     return mysqli_affected_rows($conn);
 }
-function approveRequestFormDirector($data)
+function actionDirector($data)
 {
     global $conn;
 
@@ -112,7 +115,7 @@ function searchStaff($keyword)
         $query = "SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = '0'";
         return query($query);
     }   
-    $query = "SELECT * FROM tb_requests WHERE id LIKE '%$keyword%' OR requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%' AND cancelation =0 AND id_users = $id_author; ";
+    $query = "SELECT * FROM tb_requests WHERE rq_code LIKE '%$keyword%' OR requestors_name LIKE '%$keyword%' OR today_date LIKE '%$keyword%' OR date_needed LIKE '%$keyword%' AND cancelation =0 AND id_users = $id_author; ";
     return query($query);
 }
 
