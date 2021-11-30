@@ -14,7 +14,10 @@ if($_SESSION['level'] != "staff")
 require "../function.php";
 $id_author =$_SESSION['users_id'];
 $staffs = query("SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = 0");
-$total = count($staffs);
+
+$total = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = 0"));
+$waiting = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author AND it_team = 0 AND cancelation = 0"));
+$rejected = count(query("SELECT * FROM tb_requests WHERE id_users = $id_author AND it_team = 2 AND cancelation = 0"));
 
 $succes = query("SELECT id FROM tb_requests WHERE id_users = $id_author AND it_team = 0");
 $t = count($succes);
@@ -40,6 +43,7 @@ $no = 0;
     <meta name="author" content="">
 
     <title>Dashboard <?= $_SESSION['users_depart']; ?></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
@@ -95,7 +99,7 @@ $no = 0;
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                             TOTAL REQUEST WAITING FOR IT APPROVAL</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $t; ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $waiting; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
@@ -113,7 +117,7 @@ $no = 0;
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                             TOTAL REQUEST REJECTED</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_rejects; ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $rejected; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -182,7 +186,16 @@ $no = 0;
                                         ?>
                                         <tr>
                                             <td><?= $no; ?></td>
-                                            <td><?= $staff['rq_code']; ?></td>
+                                            <td>
+                                            <?php
+                                                $show = $staff['rq_code'];
+                                                if($show == ""){
+                                                    echo "-";
+                                                }else{
+                                                    echo $show;
+                                                }
+                                            ?>
+                                            </td>
                                             <td>
                                                 <?php 
                                                     for($i = 0; $i < count($types_array); $i++){
@@ -239,13 +252,22 @@ $no = 0;
                                                             <?php
                                                         break;
                                                     }
-                                                    if($staff['note']=="")
-                                                    {
-                                                        echo "";
-                                                    }
-                                                    else{
-                                                        echo "<span class='badge bg-dark text-white'>with Note</span>";
-                                                    }
+                                                        $showNote = $staff['note'];
+                                                        $showApprove = $staff['it_team'];
+
+                                                        if(empty($showNote) AND $showApprove=="")
+                                                        {
+                                                            echo "";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==0){
+                                                            echo "<span class='badge bg-warning text-white'>with Note</span>";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==1){
+                                                            echo "<span class='badge bg-success text-white'>with Note</span>";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==2){
+                                                            echo "<span class='badge bg-danger text-white'>with Note</span>";
+                                                        }
                                                 ?>
                                             </td>
                                             <td>
@@ -272,7 +294,7 @@ $no = 0;
                                                 ?>
                                             </td>
                                             <td class="text-center form-inline">
-                                                <a href="staff_form_review.php?id=<?= $staff['id']; ?>" class="btn btn-primary btn-sm my-1" style="margin-right: 5px;">Review Details</a>
+                                                <button type="button" onclick="openModalDetails(<?= $staff['id'];?>)" class="btn btn-primary btn-sm mx-1">View Detail</button>
 
                                                 <form class="" action="" method="post">
                                                     <input type="text" name="id" value="<?= $staff['id']; ?>" hidden>
@@ -348,8 +370,41 @@ $no = 0;
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal_details" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <input type="hidden" id="id_modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Detail Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modal_contents" class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="printOut()"><i class="fa fa-print"></i> Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Script -->
     <?php require "../assets/style/scripts.php"; ?>
+    <script>
+        function openModalDetails(id){
+            var modal = new bootstrap.Modal(document.getElementById('modal_details'));
+
+            $("#modal_contents").load("ajax_staff/staff_view.php?id="+id);
+            $("#id_modal").val(id);
+
+            modal.show();
+        }
+        function printOut(){
+            id = $("#id_modal").val();
+            window.open("print.php?id="+id, "_blank");
+        } 
+    </script>
 
 </body>
 

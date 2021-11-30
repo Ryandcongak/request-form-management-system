@@ -80,20 +80,55 @@ if (isset($_POST["submit"])) {
                                             <input type="text" name="id" value="<?= $datas['id']; ?>" hidden>
                                             <div class="mb-3">
                                             <select class="form-select form-select-lg mb-3 form-control" name="status" aria-label=".form-select-lg example">
-                                                <option selected><?= ($datas['status']==0)?"Dalam Proses":"Terselesaikan"; ?></option>
-                                                <option value="0"> Dalam Proses</option>
-                                                <option value="1"> Terselesaikan</option>
+                                                <option selected>
+                                                <?php 
+                                                            switch($datas['status']){
+                                                                case 0 :
+                                                                    echo "In Progress";
+                                                                break;
+
+                                                                case 1 :
+                                                                    echo "Done";
+                                                                break;
+
+                                                                case 2 :
+                                                                    echo "Rejected";
+                                                                break;
+                                                            }
+                                                        ?>
+                                                </option>
+                                                <option value="0">In Progress</option>
+                                                <option value="1">Done</option>
+                                                <option value="2">Rejected</option>
                                                 
                                             </select>
                                             </div>
                                             <div class="mb-3">
                                             <label for="done_by" class="form-label">Diselesaikan oleh</label>
                                             <select class="form-select form-control" name="done_by" aria-label="Default select example">
-                                                <option selected>Pilih staff IT</option>
+                                                <option selected>
+                                                    <?php 
+                                                        switch($datas['done_by']){
+                                                            case "Agus" :
+                                                                echo "Agus";
+                                                            break;
+                                                            case "Ryan" :
+                                                                echo "Done";
+                                                            break;
+                                                            case "Oka" :
+                                                                echo "Rejected";
+                                                            break;
+                                                        }
+                                                    ?>
+                                                </option>
                                                 <option value="Agus">Agus</option>
                                                 <option value="Ryan">Ryan</option>
                                                 <option value="Oka">Oka</option>
                                             </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="note" class="form-label">Note for request</label>
+                                                <textarea class="form-control" placeholder="Leave a note here" id="floatingTextarea2" name="note" style="height: 100px"></textarea>
                                             </div>
                                             <div class="mb-3">
                                                 <button type="submit" name="submit" class="btn btn-success"><h4>Save</h4></button>

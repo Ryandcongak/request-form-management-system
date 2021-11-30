@@ -5,7 +5,13 @@
 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>
 </button>
-
+<!-- Name User -->
+<span class="navbar-brand mb-0 h1">
+    <?= strtoupper($_SESSION['level']); ?>
+    <figcaption class="blockquote-footer">
+    Indolinen
+  </figcaption>
+</span>
 <!-- Topbar Search -->
 <?php
 if(isset($_POST['search'])){
@@ -15,7 +21,7 @@ if(isset($_POST['search'])){
 <form
     class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="POST">
     <div class="input-group">
-        <input type="text" name="keyword" class="form-control bg-light border-0 small" placeholder="Search by No.ID Request or Requestor Name or Date..."
+        <input type="text" name="keyword" class="form-control bg-light border-0 small" placeholder="Search by Code Request or Requestor Name or Date..."
             aria-label="Search" aria-describedby="basic-addon2">
         <div class="input-group-append">
             <button class="btn btn-primary" type="submit" name="search">
@@ -43,11 +49,11 @@ if(isset($_POST['search'])){
             <h6 class="dropdown-header">
                 Alerts Center
             </h6>
-            <?php $get_sql= mysqli_query($conn,"SELECT * FROM tb_requests WHERE director=0 ORDER BY today_date DESC");
+            <?php $get_sql= mysqli_query($conn,"SELECT * FROM tb_requests WHERE director = 0 ORDER BY today_date DESC");
             if(mysqli_num_rows($get_sql)>0){
                 while($result=mysqli_fetch_assoc($get_sql))
                 {
-                echo '<a class="dropdown-item d-flex align-items-center" href="director_view_request.php?id='.$result['id'].'">
+                echo '<a class="dropdown-item d-flex align-items-center" onclick="openModalDetails('.$result['id'].')">
                 <div class="mr-3">
                     <div class="icon-circle bg-primary">
                         <i class="fas fa-file-alt text-white"></i>

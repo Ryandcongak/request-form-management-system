@@ -30,7 +30,7 @@ $total_done = checkTotal(1);
 // $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
 // $awalData = ($jmlperHalaman * $halamanAktif) - $jmlperHalaman;
 
-$sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.cancelation, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation = 0 ORDER BY i.today_date DESC");
+$sql = query("SELECT u.depart, i.id, i.rq_code, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.cancelation, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation = 0 ORDER BY i.today_date DESC");
 
 
 
@@ -177,7 +177,8 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 5%;">No. ID Request</th>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th>ID request</th>
                                                     <th>Requestor Name</th>
                                                     <th>Department</th>
                                                     <th>Details</th>
@@ -197,7 +198,34 @@ $sql = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_nee
                                                 <?php $no++; ?>
                                                 <tr>
                                                     <td><?= $no; ?></td>
-                                                    <td><?= $data['requestors_name']; ?></td>
+                                                    <td><?php 
+                                                        $show = $data['rq_code'];
+                                                        if($show == ""){
+                                                            echo "-";
+                                                        }else{
+                                                            echo $show;
+                                                        } ?>
+                                                    </td>
+                                                    <td><?= $data['requestors_name']; ?>
+                                                    <?php
+                                                        $showNote = $data['note'];
+                                                        $showApprove = $data['it_team'];
+
+                                                        if(empty($showNote) AND $showApprove=="")
+                                                        {
+                                                            echo "";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==0){
+                                                            echo "<span class='badge bg-warning text-white'>Note</span>";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==1){
+                                                            echo "<span class='badge bg-success text-white'>Note</span>";
+                                                        }
+                                                        elseif(!empty($showNote) AND $showApprove==2){
+                                                            echo "<span class='badge bg-danger text-white'>Note</span>";
+                                                        }
+                                                    ?>
+                                                    </td>
                                                     <td><?= $data['depart'];?></td>
                                                     <td>
                                                         <button type="button" onclick="openModalDetails(<?= $data['id'];?>)" class="btn btn-primary btn-sm">View Detail</button>

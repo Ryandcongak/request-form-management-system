@@ -12,12 +12,11 @@ if($_SESSION['level'] != "director")
     exit;
 }
 require "../function.php";
-$total = count(query("SELECT * FROM tb_requests"));
+$total = count(query("SELECT * FROM tb_requests WHERE cancelation = 0"));
 $datas = query("SELECT * FROM tb_requests ORDER BY today_date DESC");
-$waiting = query("SELECT id AS success FROM tb_requests WHERE director = 0");
-$t = count($waiting);
-$rejected = query("SELECT id AS success FROM tb_requests WHERE director = 2");
-$r = count($rejected);
+$waiting = count(query("SELECT * FROM tb_requests WHERE director = 0 AND cancelation = 0"));
+$rejected = count(query("SELECT id AS success FROM tb_requests WHERE director = 2 and cancelation = 0"));
+
 function checkTotal($code){
     return selectConditionQuery("SELECT COUNT(id) AS total FROM tb_requests WHERE status = $code", "total");
 }
@@ -25,7 +24,7 @@ function checkTotal($code){
 $total_rejects = checkTotal(2);
 $total_done = checkTotal(1);
 
-$selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC")
+$selects = query("SELECT u.depart, i.id,i.rq_code, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC");
 
 ?>
 <!DOCTYPE html>
@@ -40,8 +39,11 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
     <meta name="author" content="">
 
     <title>Dashboard DIRECTOR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
     <!-- style -->
     <?php require "../assets/style/style.php"; ?>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
 </head>
 
@@ -51,7 +53,7 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php require "director/sidebar-director.php"; ?>
+        
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -95,7 +97,7 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                             Total Request Waiting For Director Approval</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $t; ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $waiting; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -113,7 +115,7 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                 Total Request Rejected</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $r; ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $rejected; ?></div>
                                         </div>
                                         <div class="col-auto">
                                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -177,20 +179,35 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
                                          $no++; ?>
                                         <tr>
                                             <td><?= $no; ?></td>
-                                            <td><?= $data['rq_code']; ?></td>
+                                            <td><?php 
+                                            $show = $data['rq_code'];
+                                            if($show == ""){
+                                                echo "-";
+                                            }else{
+                                                echo $show;
+                                            } ?></td>
                                             <td><?= $data['requestors_name']; ?>
                                             <?php
-                                            if($data['note']=="")
+                                            $showNote = $data['note'];
+                                            $showApprove = $data['it_team'];
+
+                                            if(empty($showNote) AND $showApprove=="")
                                             {
                                                 echo "";
                                             }
-                                            else{
-                                                echo "<span class='badge bg-dark text-white'>Note</span>";
+                                            elseif(!empty($showNote) AND $showApprove==0){
+                                                echo "<span class='badge bg-warning text-white'>Note</span>";
+                                            }
+                                            elseif(!empty($showNote) AND $showApprove==1){
+                                                echo "<span class='badge bg-success text-white'>Note</span>";
+                                            }
+                                            elseif(!empty($showNote) AND $showApprove==2){
+                                                echo "<span class='badge bg-danger text-white'>Note</span>";
                                             }
                                              ?>
                                             </td>
                                             <td><?= $data['depart']; ?></td>
-                                            <td><a href="director_view_request.php?id=<?= $data['id'];?>" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Klik Untuk Lihat Detail Request">View Details</a></td>
+                                            <td><button type="button" onclick="openModalDetails(<?= $data['id'];?>)" class="btn btn-primary btn-sm">View Detail</button></td>
                                             <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
                                             <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
                                             <td><?php 
@@ -290,8 +307,74 @@ $selects = query("SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal_details" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <input type="hidden" id="id_modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Detail Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modal_contents" class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="printOut()"><i class="fa fa-print"></i> Print</button>
+                    <button type="button" class="btn btn-primary" onclick="changeStatus('director', 1)"><i class="fa fa-pencil-alt"></i> Approve</button>
+                    <button type="button" class="btn btn-danger" onclick="changeStatus('director', 2)"><i class="fa fa-times"></i> Rejected</button>
+                    <button type="button" class="btn btn-warning" onclick="changeStatus('director', 0)"><i class="fa fa-search"></i> Pending</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Script -->
     <?php require "../assets/style/scripts.php"; ?>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready( function () {
+        $('#dataTable').DataTable();
+        } );
+    </script>
+
+    <script>
+        function openModalDetails(id){
+            var modal = new bootstrap.Modal(document.getElementById('modal_details'));
+
+            $("#modal_contents").load("ajax_director/director_view.php?id="+id);
+            $("#id_modal").val(id);
+
+            modal.show();
+        }
+
+        function changeStatus(kolom, status){
+            if(confirm("Are you sure?")){
+                $.ajax({
+                    type: "POST",
+                    url: "ajax_director/director_controller.php?mode=update",
+                    data: {
+                        "kolom":kolom,
+                        "status":status,
+                        "id":$("#id_modal").val()
+                    },
+                    success: function (response) {
+                        if(response == 1){
+                            window.location.reload();
+                        } else {
+                            alert("Failed, Ask IT");
+                        }
+                    }
+                });
+            }
+        }
+
+        function printOut(){
+            id = $("#id_modal").val();
+            window.open("print.php?id="+id, "_blank");
+        } 
+    </script>
 
 </body>
 

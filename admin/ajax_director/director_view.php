@@ -7,6 +7,18 @@ $datas = selectAllCustomQuery("SELECT * FROM tb_requests WHERE id = $id")[0];
 <div class="row">                    
     <div class="col-sm-6">
         <div class="mb-3">
+            <label for="" class="form-label"><strong>Code Request</strong></label>
+            <div id="test"><?php 
+            $showcode=$datas['rq_code'];
+            if($showcode=="")
+            {
+                echo "-";
+            }
+            else{
+                echo $showcode;
+            } ?></div>
+        </div>
+        <div class="mb-3">
             <label for="" class="form-label"><strong>Request Date</strong></label>
             <div id="test"><?= date("D, d F Y", strtotime($datas['today_date'])); ?></div>
         </div>
@@ -71,6 +83,7 @@ $datas = selectAllCustomQuery("SELECT * FROM tb_requests WHERE id = $id")[0];
         </div>";
         }
         ?>
+        
     </div>
     <div class="col-sm-12">
         <div class="mb-3">

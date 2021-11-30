@@ -80,8 +80,9 @@ function statusOK($data)
     $id = $data["id"];
     $status = $data["status"];
     $done_by =$data["done_by"];
+    $note = $data ['note'];
 
-    $query = "UPDATE `tb_requests` SET `status` = '$status', `done_by`='$done_by' WHERE `tb_requests`.`id` = '$id'; ";
+    $query = "UPDATE `tb_requests` SET `status` = '$status', `done_by`='$done_by', `note` = '$note' WHERE `tb_requests`.`id` = '$id'; ";
     mysqli_query($conn, $query);
 
     return mysqli_affected_rows($conn);
@@ -121,12 +122,11 @@ function searchStaff($keyword)
 
 function search($keyword)
 {
-    $id_author = $_SESSION['users_id'];
     if($keyword == ""){
-        $query = "SELECT * FROM tb_requests WHERE id_users = $id_author AND cancelation = '0'";
+        $query = "SELECT u.depart, i.id,i.rq_code, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation =0 ORDER BY i.today_date DESC";
         return query($query);
     }  
-    $query = "SELECT u.depart, i.id, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.id LIKE '%$keyword%' OR i.requestors_name LIKE '%$keyword%' OR i.today_date LIKE '%$keyword%' OR i.date_needed LIKE '%$keyword%'";
+    $query = "SELECT u.depart, i.id,i.rq_code, i.requestors_name, i.today_date, i.date_needed, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.rq_code LIKE '%$keyword%' OR i.requestors_name LIKE '%$keyword%' OR i.today_date LIKE '%$keyword%' OR i.date_needed LIKE '%$keyword%'";
     return query($query);
 }
 function searchAdmin($keyword)

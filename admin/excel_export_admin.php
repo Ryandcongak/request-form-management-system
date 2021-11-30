@@ -17,13 +17,15 @@ if($_SESSION['level'] != "it")
     header("Content-Disposition: attachment; filename=Data-Request.xls");
 
 require "../function.php";
-$sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_needed,i.requests_choose, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status, i.done_by FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users ORDER BY i.today_date DESC");
+$cancel = 0;
+$sql = query("SELECT u.depart, i.id,i.rq_code, i.requestors_name, i.today_date, i.date_needed,i.requests_choose, i.notes_sharing,i.notes_others,i.director, i.it_team, i.status,i.note, i.done_by,i.cancelation FROM users AS u INNER JOIN tb_requests AS i ON u.id = i.id_users WHERE i.cancelation = $cancel ORDER BY i.today_date DESC");
 ?>
 
 <table>
     <thead>
         <tr>
-            <th>No. ID Request</th>
+            <th>No</th>
+            <th>ID Request</th>
             <th>Requestor Name</th>
             <th>Departement</th>
             <th>Date Request</th>
@@ -32,22 +34,70 @@ $sql = query("SELECT u.depart, i.id,i.requestors_name, i.today_date, i.date_need
             <th>Note Sharing</th>
             <th>Others Note</th>
             <th>Status Request</th>
+            <th>Note from IT</th>
         </tr>
     </thead>
     <tbody>
-        <?php        
-        foreach($sql as $data):
-        ?>
+        <?php foreach($sql as $data):?>
+            <?php
+                $no =0;
+                $no++; ?>
         <tr>
-            <td><?= $data['id']; ?></td>
+            <td><?= $no; ?></td>
+            <td>
+                <?php
+                $rq_code = $data['rq_code'];
+                if(empty($rq_code))
+                {
+                    echo "-";
+                }else
+                {
+                    echo $rq_code;
+                }
+                ?>
+            </td>
             <td><?= $data['requestors_name']; ?></td>
             <td><?= $data['depart']; ?></td>
-            <td><?= $data['today_date']; ?></td>
-            <td><?= $data['date_needed']; ?></td>
+            <td><?= date("D, d F Y", strtotime($data['today_date'])); ?></td>
+            <td><?= date("D, d F Y", strtotime($data['date_needed'])); ?></td>
             <td><?= $data['requests_choose']; ?></td>
             <td><?= $data['notes_sharing']; ?></td>
             <td><?= $data['notes_others']; ?></td>
-            <td><?php echo ($data['status']=='0')?"In Proses":"DONE by"; echo $data['done_by']; ?></td>
+            <td>
+            <?php
+                    switch($data['status']){
+                        case 0 :
+                            ?>
+                                <span class='badge badge-warning'>In Progress</span>
+                            <?php
+                        break;
+
+                        case 1 :
+                            ?>
+                                <span class='badge badge-success'>Done</span>
+                            <?php
+                        break;
+
+                        case 2 :
+                            ?>
+                                <span class='badge badge-danger'>Rejected</span>
+                            <?php
+                        break;
+                    }
+                ?>
+            </td>
+            <td>
+            <?php
+                $noteIT = $data['note'];
+                if(empty($noteIT))
+                {
+                    echo "-";
+                }else
+                {
+                    echo $noteIT;
+                }
+                ?>
+            </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
